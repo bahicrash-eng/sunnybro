@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACK DOG HACKER // QUANTUM SIGNAL MATRIX</title>
+    
+    <!-- Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --neon-red: #ff1a40;
+            --neon-glow: rgba(255, 26, 64, 0.6);
+            --bg-base: #060103;
+            --panel-bg: rgba(22, 2, 6, 0.88);
+            --border-red: rgba(255, 26, 64, 0.4);
+            --text-dim: #b05c6d;
+            
+            /* 4-Color Rotating Spectrum */
+            --c1: #ff0044;
+            --c2: #ff7700;
+            --c3: #ff00bb;
+            --c4: #8800ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Share Tech Mono', monospace;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100vw;
+            height: 100dvh;
+            background-color: var(--bg-base);
+            color: var(--neon-red);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* CRT SCANLINES */
+        body::before {
+            content: " ";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 0, 4, 0) 50%, rgba(0, 0, 0, 0.45) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 55, 0.03), rgba(0, 0, 0, 0.01), rgba(255, 0, 55, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #matrixCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.32;
+        }
+
+        /* MAIN APP CONTAINER */
+        .redx-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            height: 100dvh;
+            padding: 20px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* HEADER */
+        .header-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .redx-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-red), 0 0 25px var(--neon-red);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        .redx-title span { color: var(--neon-red); }
+
+        .top-info-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .promo-pill {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255, 26, 64, 0.1);
+            border: 1px dashed var(--neon-red);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .status-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-online {
+            color: #ffffff;
+            background: rgba(255, 26, 64, 0.25);
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 12px rgba(255, 26, 64, 0.4);
+        }
+        .status-offline {
+            color: #ff859d;
+            background: rgba(40, 0, 8, 0.6);
+            border: 1px solid rgba(255, 26, 64, 0.35);
+        }
+
+        /* MAIN CARD */
+        .main-card {
+            width: 100%;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-red);
+            border-radius: 20px;
+            padding: 16px 14px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 0 35px rgba(255, 26, 64, 0.18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* DOUBLE-CLICK ID CARD */
+        .id-badge-card {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 26, 64, 0.12), rgba(20, 0, 5, 0.8));
+            border: 1.5px solid rgba(255, 26, 64, 0.5);
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .id-view-mode {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .id-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .id-icon {
+            font-size: 20px;
+            color: var(--neon-red);
+        }
+
+        .id-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .id-display-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .id-hint-badge {
+            font-size: 10px;
+            color: #ff859d;
+            border: 1px solid rgba(255, 26, 64, 0.4);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .id-edit-mode {
+            display: none;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inline-id-input {
+            flex: 1;
+            height: 38px;
+            background: #000000;
+            border: 1.5px solid var(--neon-red);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            text-align: center;
+            outline: none;
+        }
+
+        .btn-save-id {
+            height: 38px;
+            padding: 0 14px;
+            background: var(--neon-red);
+            border: none;
+            border-radius: 8px;
+            color: #000000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        /* 4-COLOR SPECTRUM HUD */
+        .hud-wrapper {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4px 0;
+        }
+
+        .spectrum-ring {
+            position: absolute;
+            width: 206px;
+            height: 206px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
+            mask: radial-gradient(transparent 66%, black 67%);
+            -webkit-mask: radial-gradient(transparent 66%, black 67%);
+            filter: drop-shadow(0 0 10px rgba(255, 0, 68, 0.8)) drop-shadow(0 0 20px rgba(136, 0, 255, 0.6));
+            animation: spinSpectrum 6s linear infinite;
+        }
+
+        .spectrum-glow-layer {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            background: conic-gradient(from 180deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
+            filter: blur(16px);
+            opacity: 0.35;
+            animation: spinSpectrumRev 8s linear infinite;
+        }
+
+        .dashed-radar-ring {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(255, 255, 255, 0.25);
+            animation: spinSpectrumRev 18s linear infinite;
+        }
+
+        .hud-inner-core {
+            position: absolute;
+            width: 135px;
+            height: 135px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 26, 64, 0.3);
+            background: radial-gradient(circle, rgba(255, 26, 64, 0.1) 0%, rgba(10, 0, 3, 0.8) 75%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hud-inner-ring {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 1.5px solid transparent;
+            border-top: 2.5px solid var(--neon-red);
+            border-bottom: 2.5px solid var(--neon-red);
+            animation: spinSpectrum 4s linear infinite;
+        }
+
+        @keyframes spinSpectrum { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spinSpectrumRev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+
+        .spectrum-ring.turbo {
+            animation: spinSpectrum 1s linear infinite;
+            filter: drop-shadow(0 0 20px var(--c1)) drop-shadow(0 0 35px var(--c3));
+        }
+
+        .hud-center-content {
+            position: relative;
+            z-index: 8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hud-label {
+            font-size: 10px;
+            color: #ff99ae;
+            letter-spacing: 2px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 26, 64, 0.35);
+            margin-bottom: 2px;
+        }
+
+        .hud-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 0 15px var(--neon-red), 0 0 35px var(--neon-red);
+        }
+
+        .btn-redx {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(255, 26, 64, 0.25), rgba(80, 0, 15, 0.7));
+            color: #ffffff;
+            border: 1.5px solid var(--neon-red);
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 26, 64, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-redx:hover {
+            background: var(--neon-red);
+            color: #000000;
+            box-shadow: 0 0 35px var(--neon-red);
+        }
+
+        .footer-brand {
+            font-size: 10px;
+            color: rgba(255, 26, 64, 0.65);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MATRIX CANVAS -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- MAIN INTERFACE -->
+    <div class="redx-container" id="mainContainer">
+        
+        <!-- HEADER -->
+        <div class="header-box">
+            <h1 class="redx-title"><i class="fas fa-terminal"></i> BLACK DOG <span>HACKER</span></h1>
+            <div class="top-info-bar">
+                <div class="promo-pill"><i class="fas fa-shield-alt"></i> SYSTEM ACTIVE</div>
+                <div class="status-badge status-offline" id="statusBadge">
+                    <i class="fas fa-wifi"></i> ACTIVE UID
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="main-card">
+            
+            <!-- DOUBLE-CLICK ID CARD (ABOVE SIGNAL) -->
+            <div class="id-badge-card" id="idBadgeCard" ondblclick="enableIdEdit()">
+                <div class="id-view-mode" id="idViewMode">
+                    <div class="id-info-left">
+                        <i class="fas fa-fingerprint id-icon"></i>
+                        <div>
+                            <div class="id-label">AUTHORIZED ID CODE</div>
+                            <div class="id-display-value" id="idDisplayVal">348899728</div>
+                        </div>
+                    </div>
+                    <div class="id-hint-badge"><i class="fas fa-pen"></i> DBL TAP</div>
+                </div>
+
+                <div class="id-edit-mode" id="idEditMode" style="display: none;">
+                    <input type="text" maxlength="9" id="inlineIdInput" class="inline-id-input" placeholder="9-DIGIT ID">
+                    <button type="button" class="btn-save-id" onclick="saveIdCode()"><i class="fas fa-check"></i> SAVE</button>
+                </div>
+            </div>
+
+            <!-- 4-COLOR ROTATING SPECTRUM HUD -->
+            <div class="hud-wrapper">
+                <div class="spectrum-glow-layer"></div>
+                <div class="spectrum-ring" id="spectrumHalo"></div>
+                <div class="dashed-radar-ring"></div>
+
+                <div class="hud-inner-core">
+                    <div class="hud-inner-ring"></div>
+                </div>
+
+                <div class="hud-center-content">
+                    <span class="hud-label">SIGNAL</span>
+                    <span class="hud-value" id="displaySignal">1.00x</span>
+                </div>
+            </div>
+
+            <!-- GENERATE BUTTON -->
+            <button class="btn-redx" id="btnGenerate" onclick="getSignal()">
+                <i class="fas fa-bolt"></i> GENERATE SIGNAL
+            </button>
+        </div>
+
+        <div class="footer-brand">
+            BLACK DOG HACKER // QUANTUM MATRIX
+        </div>
+    </div>
+
+    <script>
+        const SECRET_CODE = "348899728";
+        let isFirebaseConnected = false;
+        let currentUserId = "348899728";
+
+        // MATRIX BACKGROUND
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZBDH';
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(6, 1, 3, 0.12)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff1a40';
+            ctx.font = fontSize + 'px "Share Tech Mono"';
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 35);
+
+        // FIREBASE SETUP
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDycD8m6GFSXfFkg5yTdkhZYJrjwuU9mQ",
+            authDomain: "freefiremagick-b0b1c.firebaseapp.com",
+            databaseURL: "https://freefiremagick-b0b1c-default-rtdb.firebaseio.com",
+            projectId: "freefiremagick-b0b1c",
+            storageBucket: "freefiremagick-b0b1c.firebasestorage.app",
+            messagingSenderId: "28065563036",
+            appId: "1:28065563036:web:547a795ab213f8b35fc859",
+            measurementId: "G-TG2CVWCBWM"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // AUTO INITIALIZE UID ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            applyIdAuthorization(currentUserId);
+        });
+
+        // ID LOGIC & STATUS
+        function applyIdAuthorization(idValue) {
+            currentUserId = idValue;
+            document.getElementById('idDisplayVal').innerText = idValue;
+            const statusBadge = document.getElementById('statusBadge');
+
+            if (idValue === SECRET_CODE) {
+                isFirebaseConnected = true;
+                db.goOnline();
+                statusBadge.className = "status-badge status-online";
+                statusBadge.innerHTML = '<i class="fas fa-wifi"></i> ACTIVE UID';
+            } else {
+                isFirebaseConnected = false;
+                db.goOffline();
+                statusBadge.className = "status-badge status-offline";
+                statusBadge.innerHTML = '<i class="fas fa-wifi-slash"></i> ACTIVE UID';
+            }
+        }
+
+        function enableIdEdit() {
+            document.getElementById('idViewMode').style.display = 'none';
+            document.getElementById('idEditMode').style.display = 'flex';
+            const input = document.getElementById('inlineIdInput');
+            input.value = currentUserId;
+            input.focus();
+        }
+
+        function saveIdCode() {
+            const inputVal = document.getElementById('inlineIdInput').value.trim();
+            if (inputVal.length !== 9 || isNaN(inputVal)) {
+                alert("Please enter a valid 9-digit User ID!");
+                return;
+            }
+            applyIdAuthorization(inputVal);
+            document.getElementById('idEditMode').style.display = 'none';
+            document.getElementById('idViewMode').style.display = 'flex';
+        }
+
+        // SIGNAL GENERATION
+        let isGenerating = false;
+        function getSignal() {
+            if (isGenerating) return;
+            isGenerating = true;
+
+            const displaySignal = document.getElementById('displaySignal');
+            const spectrumHalo = document.getElementById('spectrumHalo');
+            const btn = document.getElementById('btnGenerate');
+
+            spectrumHalo.classList.add('turbo');
+            btn.disabled = true;
+
+            let targetMultiplier = parseFloat((Math.random() * 8.5 + 1.25).toFixed(2));
+            let currentVal = 1.00;
+            let step = (targetMultiplier - 1.00) / 25;
+
+            let countUp = setInterval(() => {
+                currentVal += step;
+                if (currentVal >= targetMultiplier) {
+                    currentVal = targetMultiplier;
+                    clearInterval(countUp);
+                    displaySignal.innerText = targetMultiplier.toFixed(2) + "x";
+                    spectrumHalo.classList.remove('turbo');
+                    btn.disabled = false;
+                    isGenerating = false;
+
+                    if (isFirebaseConnected) {
+                        db.ref('crashPoint').set(targetMultiplier);
+                    }
+                } else {
+                    displaySignal.innerText = currentVal.toFixed(2) + "x";
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
