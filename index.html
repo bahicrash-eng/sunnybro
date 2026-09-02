@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACK DOG STORE</title>
+    <!-- Website Favicon Icon -->
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/443fxwbzx/1783130226991/appivn.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #030712; 
+            color: #f3f4f6;
+            overflow-x: hidden; 
+        }
+        
+        /* Premium Marquee */
+        .marquee-container { 
+            background: rgba(17, 24, 39, 0.8); 
+            backdrop-filter: blur(12px);
+            color: #9ca3af; 
+            padding: 12px 0; 
+            font-weight: 500; 
+            font-size: 13px; 
+            overflow: hidden; 
+            white-space: nowrap; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .marquee-text { display: inline-block; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+        
+        /* Glassmorphism & 3D Lighting Effects */
+        .glass-nav { 
+            background: rgba(3, 7, 18, 0.7); 
+            backdrop-filter: blur(20px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .glass-modal { 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(24px); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+        .card-3d {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .card-3d:hover {
+            transform: translateY(-6px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow-1 {
+            position: absolute; width: 450px; height: 450px; top: -100px; left: -100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(3,7,18,0) 70%);
+            z-index: 0; pointer-events: none;
+        }
+        .ambient-glow-2 {
+            position: absolute; width: 600px; height: 600px; top: 40%; right: -200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(3,7,18,0) 70%);
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Custom Scrollbar for Page */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; border: 2px solid #030712; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        
+        /* Horizontal Scroll for Videos */
+        .horizontal-scroll { display: flex; overflow-x: auto; gap: 1.5rem; padding-bottom: 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .horizontal-scroll::-webkit-scrollbar { height: 6px; }
+        .horizontal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .video-card { flex: 0 0 auto; width: 280px; scroll-snap-align: start; }
+        @media (min-width: 640px) { .video-card { width: 340px; } }
+
+        /* Chat Widget Animations */
+        #chatWindow { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom right; }
+        .chat-hidden { transform: scale(0.9) translateY(40px); opacity: 0; visibility: hidden; pointer-events: none !important; }
+        .chat-visible { transform: scale(1) translateY(0); opacity: 1; visibility: visible; pointer-events: auto !important; }
+        .msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 20px; font-size: 14px; margin-bottom: 12px; line-height: 1.5; word-wrap: break-word; }
+        .msg-user { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .msg-admin { background: rgba(31, 41, 55, 0.8); color: #f3f4f6; border: 1px solid rgba(255,255,255,0.08); align-self: flex-start; border-bottom-left-radius: 4px; }
+
+        /* Tech Dot Grid background */
+        .tech-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 32px 32px; }
+    </style>
+</head>
+<body class="tech-grid pb-24 relative min-h-screen">
+
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <!-- Scrolling Notice -->
+    <div class="marquee-container sticky top-0 z-50">
+        <div class="marquee-text flex items-center gap-2">
+            <span class="text-indigo-400 font-bold">💎 ANNOUNCEMENT:</span> <span id="scrollingText">Welcome to the premium portal! Access exclusive assets...</span>
+        </div>
+    </div>
+    
+    <!-- Navbar -->
+    <nav class="glass-nav sticky top-[42px] z-40 py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4 transition-all">
+        <div class="flex items-center gap-3 cursor-pointer">
+            <!-- Custom Website Logo -->
+            <img src="https://uploads.onecompiler.io/443fxwbzx/1783130226991/appivn.png" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-indigo-500/20 border border-white/10" alt="BLACK DOG Logo">
+            <h1 class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight">BLACK DOG</h1>
+        </div>
+        
+        <div class="bg-gray-900/80 border border-white/10 px-3 py-2 rounded-full flex items-center gap-3 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+            <span class="text-xs font-semibold text-gray-400 pl-2">DEVICE ID</span>
+            <span id="deviceIdDisplay" class="font-bold text-indigo-400 tracking-wider font-mono text-sm bg-indigo-950/50 border border-indigo-900/30 px-3 py-1 rounded-md">Loading...</span>
+            <button onclick="copyToClipboard(document.getElementById('deviceIdDisplay').innerText)" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs px-4 py-2 rounded-full transition-all font-semibold flex items-center gap-1 shadow-[0_4px_12px_rgba(79,70,229,0.3)]">
+                Copy
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative max-w-5xl mx-auto text-center mt-16 mb-20 px-4">
+        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4 inline-block">SECURED INTERFACE</span>
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight drop-shadow-sm">
+            Unlock <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500">Premium Hack</span> Assets
+        </h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+            Discover engineered assets, specialized guides, and premium resources. Connect with us via live chat to secure activation coordinates.
+        </p>
+    </div>
+
+    <!-- SECTION 1: VIDEOS -->
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 mb-20 relative z-10 overflow-hidden">
+        <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-6 bg-indigo-500 rounded-full"></div>
+                <h2 class="text-2xl font-bold tracking-tight text-white">Visual Intelligence</h2>
+            </div>
+            <span class="text-[10px] font-extrabold text-gray-500 bg-gray-900 border border-white/5 px-3 py-1.5 rounded-full tracking-wider uppercase">Swipe Horizontally ➔</span>
+        </div>
+        <div id="videoGrid" class="horizontal-scroll">
+            <div class="flex justify-center w-full py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div></div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: PRODUCTS -->
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 mb-20">
+        <div class="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
+            <div class="w-2 h-6 bg-indigo-500 rounded-full"></div>
+            <h2 class="text-2xl font-bold tracking-tight text-white">Premium Cryptographic Assets</h2>
+        </div>
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            <div class="col-span-full flex justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div></div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: FREE PRODUCTS -->
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 mt-16 mb-20">
+        <div class="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
+            <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
+            <h2 class="text-2xl font-bold tracking-tight text-white">Shared Resource Pool</h2>
+        </div>
+        <div id="freeProductGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            <div class="col-span-full flex justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div></div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="videoModal" onclick="if(event.target === this) closeVideoModal()" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 md:p-8 transition-opacity">
+        <div class="bg-gray-950 rounded-2xl w-full max-w-5xl overflow-hidden relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] border border-white/10 flex flex-col">
+            <div class="flex justify-between items-center p-4 bg-gray-900 border-b border-white/10">
+                <h3 id="videoModalTitle" class="font-bold text-lg text-white truncate pr-4"></h3>
+                <button onclick="closeVideoModal()" class="bg-red-500/10 hover:bg-red-600 text-red-500 hover:text-white rounded-full w-8 h-8 flex items-center justify-center text-xl transition-all shrink-0">&times;</button>
+            </div>
+            <div class="w-full aspect-video bg-black relative">
+                <iframe id="videoFrame" class="w-full h-full absolute inset-0" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Widget -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+        <div id="chatWindow" class="chat-hidden bg-gray-950 w-[340px] sm:w-[380px] h-[520px] rounded-2xl shadow-2xl flex flex-col border border-white/10 mb-4 overflow-hidden pointer-events-auto">
+            <div class="bg-gradient-to-r from-indigo-950 via-gray-900 to-indigo-950 p-4 text-white flex justify-between items-center border-b border-white/10 shadow-md z-10">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="font-bold text-sm tracking-wide">Interface Connection</span>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white bg-white/5 hover:bg-white/15 rounded-full w-8 h-8 flex items-center justify-center transition">&times;</button>
+            </div>
+            
+            <div id="chatMessages" class="flex-grow p-4 overflow-y-auto flex flex-col bg-gray-950/80 relative">
+                <div class="text-center mb-6 mt-4">
+                    <p class="text-xs text-gray-500 font-medium">Coordinate deployment parameters and transfer data receipts here.</p>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-gray-900/60 border-t border-white/10 flex gap-2 items-center">
+                <label class="cursor-pointer text-gray-400 hover:text-indigo-400 bg-white/5 hover:bg-white/10 p-2.5 rounded-full transition-colors">
+                    📁 <input type="file" id="chatImageInput" accept="image/*" class="hidden" onchange="sendChatImage(this)">
+                </label>
+                <input type="text" id="chatInput" placeholder="Enter transmission..." class="flex-grow p-2.5 bg-gray-950/50 border border-white/10 rounded-full outline-none text-sm text-white focus:border-indigo-500 focus:bg-gray-950 transition-all">
+                
+                <!-- Chat send button updated with a direct icon -->
+                <button onclick="sendMessage()" class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-500 transition shadow-[0_4px_12px_rgba(79,70,229,0.3)] active:scale-95 flex items-center justify-center shrink-0 w-11 h-11">
+                    <svg class="w-5 h-5 transform rotate-45 -translate-x-0.5 translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <button onclick="toggleChat()" class="group relative bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-6 py-3.5 rounded-full shadow-[0_10px_30px_rgba(79,70,229,0.4)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(79,70,229,0.5)] active:translate-y-0 transition-all duration-300 pointer-events-auto flex items-center gap-2 border border-white/10">
+            <span class="text-lg">⚡</span> <span class="font-bold tracking-wide">Security Terminal</span>
+        </button>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-modal rounded-3xl p-6 md:p-8 max-w-md w-full relative border border-white/10 transform transition-all max-h-[90vh] overflow-y-auto">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 bg-white/5 text-gray-400 hover:text-red-500 hover:bg-red-500/10 w-8 h-8 rounded-full flex items-center justify-center text-xl font-bold transition">&times;</button>
+            <div class="text-center mb-6">
+                <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">SECURE ENCRYPTED HANDSHAKE</span>
+                <h2 class="text-2xl font-extrabold text-white mb-3">Authorize Asset</h2>
+                <div id="modalProductDetails" class="text-gray-400 text-sm bg-gray-900/50 p-4 rounded-xl border border-white/5"></div>
+            </div>
+            <div class="bg-indigo-950/30 border border-indigo-500/20 p-4 rounded-xl text-center mb-6 shadow-inner">
+                <p class="text-xs text-indigo-400 font-bold uppercase tracking-wider mb-1">Assigned Client Coordinates</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="modalDeviceId" class="font-bold text-indigo-300 font-mono text-lg"></span>
+                </div>
+            </div>
+            
+            <div class="space-y-3 mb-6 max-h-[200px] overflow-y-auto pr-1" id="cryptoMethods"></div>
+            
+            <!-- Payment Proof and Transaction ID Input Fields -->
+            <div class="border-t border-white/10 pt-4 mt-4 space-y-4">
+                <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full uppercase tracking-wider mb-1 inline-block">VERIFICATION DESK</span>
+                
+                <div>
+                    <label class="block text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Transaction ID (TxID)</label>
+                    <input type="text" id="modalTxId" placeholder="Enter transaction hash or ID" class="w-full p-3 bg-gray-950/50 border border-white/10 rounded-xl outline-none text-xs text-white focus:border-indigo-500 transition-all font-mono">
+                </div>
+                
+                <div>
+                    <label class="block text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Receipt Screenshot</label>
+                    <div class="flex items-center gap-3">
+                        <label class="cursor-pointer flex-grow bg-gray-950 border border-dashed border-white/10 hover:border-indigo-500 rounded-xl p-3 text-center transition-all">
+                            <span id="screenshotLabel" class="text-xs text-gray-400 font-semibold">Choose image file</span>
+                            <input type="file" id="modalScreenshot" accept="image/*" class="hidden" onchange="handleModalScreenshot(this)">
+                        </label>
+                        <div id="screenshotPreviewContainer" class="hidden w-12 h-12 rounded-xl overflow-hidden border border-white/15 bg-gray-950 shrink-0">
+                            <img id="screenshotPreview" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="submitPaymentProof()" id="btnSubmitProof" class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-xl hover:bg-emerald-500 hover:shadow-[0_4px_16px_rgba(16,185,129,0.3)] transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 text-sm">
+                    Submit Verification Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push, serverTimestamp, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyA4UUP4l7cxAyHE30gYct6aYVlAzAZZg_U", authDomain: "e-commerce-fc373.firebaseapp.com", databaseURL: "https://e-commerce-fc373-default-rtdb.firebaseio.com", projectId: "e-commerce-fc373", storageBucket: "e-commerce-fc373.firebasestorage.app", messagingSenderId: "42313532271", appId: "1:42313532271:web:20c1a80ba04c25d0c2de9a" };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const imgbbAPI = "a695efede7d125e6df0776707df7856c";
+
+        let deviceId = localStorage.getItem('storeDeviceId');
+        if (!deviceId) { deviceId = 'DEV-' + Math.random().toString(36).substr(2, 8).toUpperCase(); localStorage.setItem('storeDeviceId', deviceId); }
+        document.getElementById('deviceIdDisplay').innerText = deviceId;
+        document.getElementById('modalDeviceId').innerText = deviceId;
+
+        let localVideos = {};
+        let localProducts = {};
+        let localFreeProducts = {};
+
+        window.copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert("Copied!"); }
+        window.closePaymentModal = () => document.getElementById('paymentModal').classList.add('hidden');
+        window.toggleChat = () => {
+            const win = document.getElementById('chatWindow');
+            if(win.classList.contains('chat-hidden')) {
+                win.classList.remove('chat-hidden');
+                win.classList.add('chat-visible');
+            } else {
+                win.classList.remove('chat-visible');
+                win.classList.add('chat-hidden');
+            }
+        }
+
+        onValue(ref(db, 'settings/notice'), (snap) => { if(snap.val()?.text) document.getElementById('scrollingText').innerText = snap.val().text; });
+        onValue(ref(db, 'settings/payment'), (snap) => {
+            const payment = snap.val() || {}; const container = document.getElementById('cryptoMethods'); container.innerHTML = "";
+            const addMethod = (name, val) => { 
+                if(val) {
+                    container.innerHTML += `
+                    <div class="bg-gray-900 border border-white/5 p-3 rounded-xl flex flex-col gap-2 shadow-inner">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${name}</span>
+                        </div>
+                        <span class="text-xs font-mono text-gray-300 break-all select-all">${val}</span>
+                    </div>`; 
+                }
+            };
+            addMethod("Binance Pay ID", payment.binance); addMethod("USDT (TRC20)", payment.trc20); addMethod("USDT (BEP20)", payment.bep20); addMethod("Tron (TRX)", payment.tron);
+        });
+
+        window.openVideoModal = (key, link, title) => {
+            let currentViews = localVideos[key]?.views || 0;
+            update(ref(db, `videos/${key}`), { views: currentViews + 1 });
+
+            let embedLink = link;
+            if(link.includes('drive.google.com')) embedLink = link.replace(/\/view.*$/, '/preview'); 
+            
+            document.getElementById('videoFrame').src = embedLink;
+            document.getElementById('videoModalTitle').innerText = title;
+            document.getElementById('videoModal').classList.remove('hidden');
+        }
+        
+        window.closeVideoModal = () => { document.getElementById('videoFrame').src = ""; document.getElementById('videoModal').classList.add('hidden'); }
+
+        window.toggleLike = (event, key) => {
+            event.stopPropagation();
+            let likedVideos = JSON.parse(localStorage.getItem('likedVideos') || '{}');
+            let currentLikes = localVideos[key]?.likes || 0;
+            
+            if(likedVideos[key]) {
+                update(ref(db, `videos/${key}`), { likes: Math.max(0, currentLikes - 1) });
+                delete likedVideos[key];
+            } else {
+                update(ref(db, `videos/${key}`), { likes: currentLikes + 1 });
+                likedVideos[key] = true;
+            }
+            localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+        }
+
+        onValue(ref(db, 'videos'), (snapshot) => {
+            localVideos = snapshot.val() || {};
+            const grid = document.getElementById('videoGrid'); grid.innerHTML = "";
+            let likedVideos = JSON.parse(localStorage.getItem('likedVideos') || '{}');
+
+            if (snapshot.exists()) {
+                Object.keys(localVideos).reverse().forEach(key => {
+                    const vid = localVideos[key];
+                    const safeTitle = vid.title ? vid.title.replace(/'/g, "\\'").replace(/"/g, '&quot;') : 'Video'; 
+                    const safeLink = vid.link ? vid.link.replace(/'/g, "\\'").replace(/"/g, '&quot;') : '';
+                    
+                    const views = vid.views || 0;
+                    const likes = vid.likes || 0;
+                    const isLiked = likedVideos[key];
+
+                    grid.innerHTML += `
+                        <div class="video-card group card-3d rounded-2xl overflow-hidden flex flex-col relative cursor-pointer" onclick="openVideoModal('${key}', '${safeLink}', '${safeTitle}')">
+                            <div class="relative h-44 w-full overflow-hidden bg-gray-950">
+                                <img src="${vid.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gray-950/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
+                                    <span class="text-white text-xs font-bold bg-indigo-600 px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Decode Transmission
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col justify-between z-10">
+                                <h3 class="font-bold text-gray-200 line-clamp-2 leading-snug mb-3 text-sm">${vid.title}</h3>
+                                <div class="flex items-center justify-between mt-auto border-t border-white/5 pt-3">
+                                    <span class="text-[11px] font-semibold text-gray-400 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        ${views} Views
+                                    </span>
+                                    <button onclick="toggleLike(event, '${key}')" class="text-[11px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors ${isLiked ? 'bg-red-500/10 text-red-400' : 'bg-white/5 text-gray-400 hover:bg-red-500/10 hover:text-red-400'}">
+                                        <svg class="w-3.5 h-3.5 ${isLiked ? 'fill-current' : 'fill-none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        ${likes}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else grid.innerHTML = "<p class='text-gray-500 w-full text-center py-10'>No transmissions cataloged.</p>";
+        });
+
+        window.openPaymentModal = (key, title, price) => { 
+            let currentViews = localProducts[key]?.views || 0;
+            update(ref(db, `products/${key}`), { views: currentViews + 1 });
+            document.getElementById('modalProductDetails').innerHTML = `<div class="mb-1 text-white font-bold" id="selectedProductTitle">${title}</div><div class="text-indigo-400 font-extrabold text-lg mt-2">${price}</div>`; 
+            document.getElementById('paymentModal').classList.remove('hidden'); 
+        }
+
+        window.downloadProduct = (key, link) => {
+            let currentViews = localProducts[key]?.views || 0;
+            update(ref(db, `products/${key}`), { views: currentViews + 1 });
+            window.open(link, '_blank');
+        }
+
+        const unlocksRef = ref(db, `unlocked/${deviceId}`);
+        let myUnlockedProducts = {};
+        onValue(unlocksRef, (snap) => { myUnlockedProducts = snap.val() || {}; loadProducts(); });
+
+        function loadProducts() {
+            onValue(ref(db, 'products'), (snapshot) => {
+                localProducts = snapshot.val() || {};
+                const productGrid = document.getElementById('productGrid'); productGrid.innerHTML = ""; 
+                
+                if(snapshot.exists()) {
+                    Object.keys(localProducts).reverse().forEach(key => {
+                        const product = localProducts[key];
+                        const isUnlocked = myUnlockedProducts[key] === true;
+                        const views = product.views || 0;
+                        const safeTitle = product.title ? product.title.replace(/'/g, "\\'").replace(/"/g, '&quot;') : 'Product';
+                        
+                        let badgeHTML = isUnlocked 
+                            ? `<div class="absolute top-3 right-3 z-10 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-[0_4px_12px_rgba(16,185,129,0.3)] border border-emerald-400/20">UNLOCKED</div>` 
+                            : `<div class="absolute top-3 right-3 z-10 bg-indigo-500/10 backdrop-blur-md text-indigo-300 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-indigo-500/30">PREMIUM</div>`;
+
+                        let buttonHTML = isUnlocked 
+                            ? `<button onclick="downloadProduct('${key}', '${product.downloadLink}')" class="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-[0_4px_12px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-all">Initialize Download</button>` 
+                            : `<button onclick="openPaymentModal('${key}', '${safeTitle}', '${product.price}')" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-bold hover:from-indigo-500 hover:to-purple-500 shadow-[0_4px_12px_rgba(99,102,241,0.3)] active:scale-[0.98] transition-all z-20 relative">Unlock Asset</button>`;
+                        
+                        productGrid.innerHTML += `
+                            <div class="group card-3d rounded-2xl overflow-hidden flex flex-col relative">
+                                ${badgeHTML}
+                                <div class="h-44 w-full overflow-hidden relative bg-gray-950">
+                                    <img src="${product.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                </div>
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <h2 class="text-base font-bold text-gray-100 mb-4 line-clamp-2 leading-snug">${product.title}</h2>
+                                    
+                                    <div class="flex items-center justify-between mb-5 mt-auto bg-gray-900/60 border border-white/5 p-3 rounded-xl">
+                                        <div class="flex flex-col">
+                                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">METRIC</span>
+                                            <span class="text-xs font-semibold text-gray-300 flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                ${views}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col items-end">
+                                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">ACCESS FEE</span>
+                                            <span class="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">${product.price}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>${buttonHTML}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else productGrid.innerHTML = "<p class='text-gray-500 col-span-full text-center py-10'>No parameters archived.</p>";
+            });
+        }
+
+        window.downloadFreeProduct = (key, link) => {
+            let currentViews = localFreeProducts[key]?.views || 0;
+            update(ref(db, `free_products/${key}`), { views: currentViews + 1 });
+            window.open(link, '_blank');
+        }
+
+        onValue(ref(db, 'free_products'), (snapshot) => {
+            localFreeProducts = snapshot.val() || {};
+            const freeProductGrid = document.getElementById('freeProductGrid');
+            freeProductGrid.innerHTML = "";
+            
+            if(snapshot.exists()) {
+                Object.keys(localFreeProducts).reverse().forEach(key => {
+                    const product = localFreeProducts[key];
+                    const views = product.views || 0;
+                    
+                    freeProductGrid.innerHTML += `
+                        <div class="group card-3d rounded-2xl overflow-hidden flex flex-col relative">
+                            <div class="absolute top-3 right-3 z-10 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-emerald-500/30">OPEN DATA</div>
+                            <div class="h-44 w-full overflow-hidden relative bg-gray-950">
+                                <img src="${product.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            </div>
+                            <div class="p-5 flex flex-col flex-grow">
+                                <h2 class="text-base font-bold text-gray-100 mb-4 line-clamp-2 leading-snug">${product.title}</h2>
+                                
+                                <div class="flex items-center justify-between mb-5 mt-auto bg-gray-900/60 border border-white/5 p-3 rounded-xl">
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">METRIC</span>
+                                        <span class="text-xs font-semibold text-gray-300 flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            ${views}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">ACCESS FEE</span>
+                                        <span class="text-base font-extrabold text-emerald-400">FREE</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <button onclick="downloadFreeProduct('${key}', '${product.downloadLink}')" class="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-[0_4px_12px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-all">Direct Access</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else freeProductGrid.innerHTML = "<p class='text-gray-500 col-span-full text-center py-10'>No public vectors archived.</p>";
+        });
+
+        const chatBox = document.getElementById('chatMessages');
+        onValue(ref(db, `chats/${deviceId}`), (snapshot) => {
+            if(chatBox.querySelector('.text-center.mb-6')) chatBox.querySelector('.text-center.mb-6').remove();
+            chatBox.innerHTML = "";
+            if(snapshot.exists()) {
+                Object.values(snapshot.val()).forEach(msg => {
+                    const isUser = msg.sender === 'user';
+                    let content = msg.type === 'image' ? `<a href="${msg.imageUrl}" target="_blank"><img src="${msg.imageUrl}" class="w-full rounded-lg mt-1 max-h-48 object-cover border border-white/10"></a>` : msg.text;
+                    chatBox.innerHTML += `<div class="msg-bubble ${isUser ? 'msg-user' : 'msg-admin'}">${content}</div>`;
+                });
+            } else {
+                chatBox.innerHTML = `<div class="text-center mb-6 mt-10"><h4 class="font-bold text-gray-300 mb-1">Open Link Established</h4><p class="text-xs text-gray-500 font-medium px-4">Transmit secure credentials or upload receipt metrics.</p></div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        window.sendMessage = () => {
+            const input = document.getElementById('chatInput'); const text = input.value.trim();
+            if(!text) return;
+            push(ref(db, `chats/${deviceId}`), { sender: 'user', type: 'text', text: text, time: serverTimestamp() });
+            push(ref(db, `inbox_registry/${deviceId}`), { lastActive: serverTimestamp() });
+            input.value = "";
+        };
+
+        window.sendChatImage = async (inputElement) => {
+            const file = inputElement.files[0];
+            if(!file) return;
+            const textInput = document.getElementById('chatInput'); textInput.placeholder = "Uploading image..."; textInput.disabled = true;
+            const formData = new FormData(); formData.append('image', file);
+            try {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbAPI}`, { method: 'POST', body: formData });
+                const imgData = await res.json();
+                push(ref(db, `chats/${deviceId}`), { sender: 'user', type: 'image', imageUrl: imgData.data.url, time: serverTimestamp() });
+                push(ref(db, `inbox_registry/${deviceId}`), { lastActive: serverTimestamp() });
+            } catch (error) { alert("Failed to upload image. Please try again."); }
+            textInput.placeholder = "Type a message..."; textInput.disabled = false; inputElement.value = ""; 
+        };
+
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.sendMessage(); });
+
+        /* Payment Verification Handlers */
+        let modalScreenshotFile = null;
+
+        window.handleModalScreenshot = (inputElement) => {
+            const file = inputElement.files[0];
+            if(!file) return;
+            modalScreenshotFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('screenshotPreview').src = e.target.result;
+                document.getElementById('screenshotPreviewContainer').classList.remove('hidden');
+                document.getElementById('screenshotLabel').innerText = file.name;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.submitPaymentProof = async () => {
+            const txInput = document.getElementById('modalTxId');
+            const txId = txInput.value.trim();
+            const submitBtn = document.getElementById('btnSubmitProof');
+
+            if(!txId) {
+                alert("Please enter your Transaction ID or Hash.");
+                return;
+            }
+            if(!modalScreenshotFile) {
+                alert("Please upload a receipt screenshot.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white inline-block"></span> Processing...`;
+
+            try {
+                const formData = new FormData();
+                formData.append('image', modalScreenshotFile);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbAPI}`, { method: 'POST', body: formData });
+                const imgData = await res.json();
+                
+                if (imgData.success) {
+                    const imageUrl = imgData.data.url;
+                    const timestamp = serverTimestamp();
+                    
+                    const productTitleEl = document.getElementById('selectedProductTitle');
+                    const activeProduct = productTitleEl ? productTitleEl.innerText : 'Premium Asset';
+
+                    // Push TX verification data directly into the DB logs
+                    await push(ref(db, `chats/${deviceId}`), { 
+                        sender: 'user', 
+                        type: 'text', 
+                        text: `🚨 [PAYMENT RECEIVED]\nAsset: ${activeProduct}\nTxID: ${txId}`, 
+                        time: timestamp 
+                    });
+                    
+                    await push(ref(db, `chats/${deviceId}`), { 
+                        sender: 'user', 
+                        type: 'image', 
+                        imageUrl: imageUrl, 
+                        time: timestamp 
+                    });
+
+                    await push(ref(db, `inbox_registry/${deviceId}`), { 
+                        lastActive: timestamp 
+                    });
+
+                    alert("Payment verification submitted successfully. Verification takes only a few moments!");
+                    
+                    // Clear inputs and reset UI state
+                    txInput.value = "";
+                    modalScreenshotFile = null;
+                    document.getElementById('screenshotPreviewContainer').classList.add('hidden');
+                    document.getElementById('screenshotLabel').innerText = "Choose image file";
+                    closePaymentModal();
+                } else {
+                    alert("Image upload failed. Please try again.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Failed to submit verification. Please try again.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `Submit Verification Receipt`;
+            }
+        };
+    </script>
+</body>
+</html>
