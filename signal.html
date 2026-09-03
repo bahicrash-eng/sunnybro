@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BLACKDOG AVIATOR - Signal Panel</title>
+  <title>BLACKDOG AVIATOR - Official Signal</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -59,7 +59,7 @@
       transform: rotate(90deg) scale(1.1);
     }
 
-    /* সেটিংস মোডাল */
+    /* সেটিংস মোডাল (স্ক্রলযোগ্য ও রিচ ডিজাইন) */
     .settings-modal {
       display: none;
       position: fixed;
@@ -68,54 +68,92 @@
       transform: translate(-50%, -50%);
       background: #0d0f15;
       border: 2px solid var(--primary-color);
-      box-shadow: 0 0 25px var(--primary-color);
+      box-shadow: 0 0 30px var(--primary-color);
       padding: 20px;
       border-radius: 15px;
       z-index: 2000;
-      width: 320px;
+      width: 90%;
+      max-width: 340px;
+      max-height: 85vh;
+      overflow-y: auto;
       text-align: center;
     }
+    .settings-modal::-webkit-scrollbar { width: 4px; }
+    .settings-modal::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px; }
+
     .settings-modal h3 {
       color: var(--primary-color);
-      margin-bottom: 12px;
-      font-size: 15px;
+      margin: 12px 0 8px;
+      font-size: 13px;
       letter-spacing: 1px;
     }
+    
+    /* কালার গ্রিড */
     .theme-options {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
     }
     .theme-btn {
-      height: 32px;
-      border-radius: 8px;
+      height: 30px;
+      border-radius: 6px;
       border: 2px solid #fff;
       cursor: pointer;
       outline: none;
+      transition: transform 0.2s;
     }
+    .theme-btn:active { transform: scale(0.9); }
+
+    /* অ্যানিমেশন লিস্ট */
     .anim-options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
     }
     .anim-btn {
-      background: #191c24;
+      background: #181b22;
       color: #fff;
       border: 1px solid var(--primary-color);
-      padding: 8px;
+      padding: 7px 4px;
       border-radius: 6px;
       font-family: 'Orbitron', monospace;
-      font-size: 11px;
+      font-size: 9px;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
     .anim-btn.active {
       background: var(--primary-color);
       color: #000;
+      font-weight: 900;
     }
+
+    /* টাইমার অপশনস */
+    .timer-options {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    .timer-btn {
+      flex: 1;
+      background: #181b22;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: 'Orbitron', monospace;
+      cursor: pointer;
+    }
+    .timer-btn.active {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
     .close-modal {
       background: #ff0055;
       color: white;
@@ -125,9 +163,10 @@
       font-weight: bold;
       cursor: pointer;
       font-family: 'Orbitron', monospace;
+      width: 100%;
     }
 
-    /* টপ ব্যানার */
+    /* টপ ব্যানার (লকড) */
     .top-banner {
       position: fixed;
       top: 18px;
@@ -146,26 +185,22 @@
       user-select: none;
       z-index: 1000;
       white-space: nowrap;
-      cursor: pointer;
     }
 
-    /* লোগো */
+    /* লোগো (লকড) */
     .logo {
       display: block;
-      margin: 75px auto 12px; 
+      margin: 75px auto 14px; 
       width: 96px;
       height: 96px;
       border-radius: 50%;
       object-fit: cover;
       filter: drop-shadow(0 0 12px var(--primary-color));
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-    .logo:hover {
-      transform: scale(1.08);
+      user-select: none;
+      pointer-events: none;
     }
 
-    /* ইউআইডি বাটন / টেক্সট */
+    /* ইউআইডি কন্টেইনার (কেবল এটাই ডাবল ক্লিকে এডিটেবল) */
     .uid-container {
       margin-bottom: 20px;
       text-align: center;
@@ -173,34 +208,36 @@
     .uid-text {
       display: inline-block;
       font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 3px;
+      font-size: 17px;
+      letter-spacing: 2px;
       color: var(--primary-color);
       text-shadow: 0 0 15px var(--primary-color);
       user-select: none;
       cursor: pointer;
       border: 1px dashed var(--primary-color);
-      padding: 5px 15px;
+      padding: 5px 16px;
       border-radius: 8px;
       background: rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s;
     }
+    .uid-text:active { transform: scale(0.96); }
     .uid-hint {
       display: block;
       font-size: 9px;
       color: #8893a2;
-      margin-top: 4px;
+      margin-top: 5px;
       letter-spacing: 1px;
     }
 
-    /* সিগন্যাল ডিসপ্লে বৃত্ত */
+    /* সিগন্যাল সার্কেল */
     .signal-circle-container {
       display: flex;
       justify-content: center;
       margin: 20px 0;
     }
     .signal-circle {
-      width: 190px;
-      height: 190px;
+      width: 185px;
+      height: 185px;
       border: 4px solid var(--accent-color);
       border-radius: 50%;
       background: black;
@@ -215,14 +252,14 @@
       box-shadow: 0 0 15px rgba(255, 0, 0, 0.35);
     }
     .signal-circle:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
       box-shadow: 0 0 25px var(--accent-color);
     }
 
     /* বাটন */
     .btn {
       display: block;
-      width: 330px;
+      width: 320px;
       max-width: 90%;
       margin: 15px auto;
       padding: 12px;
@@ -238,22 +275,15 @@
       outline: none;
       box-shadow: 0 0 10px var(--primary-color);
     }
-    .btn:hover:not(:disabled) {
-      filter: saturate(1.5);
-    }
-    .btn:active:not(:disabled) {
-      transform: scale(0.95);
-    }
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+    .btn:hover:not(:disabled) { filter: saturate(1.4); }
+    .btn:active:not(:disabled) { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* প্রগ্রেস বার */
     .progress-container {
-      width: 330px;
+      width: 320px;
       max-width: calc(100% - 30px);
-      height: 20px;
+      height: 18px;
       margin: 10px auto;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
@@ -293,43 +323,53 @@
 <body>
   <canvas id="bgCanvas"></canvas>
 
-  <!-- সেটিংস বাটন -->
+  <!-- সেটিংস আইকন -->
   <div class="settings-btn" onclick="toggleSettings()"><i class="fas fa-gear"></i></div>
 
   <!-- সেটিংস মোডাল -->
   <div class="settings-modal" id="settingsModal">
-    <h3>SELECT COLOR THEME</h3>
+    <h3>COLOR PALETTES (8)</h3>
     <div class="theme-options">
-      <button class="theme-btn" style="background:#00f0ff" onclick="setTheme('#00f0ff', '#0855c4', '#ff0000')"></button>
-      <button class="theme-btn" style="background:#ff0055" onclick="setTheme('#ff0055', '#990033', '#00f0ff')"></button>
-      <button class="theme-btn" style="background:#00ff66" onclick="setTheme('#00ff66', '#008833', '#ff0055')"></button>
-      <button class="theme-btn" style="background:#ffbb00" onclick="setTheme('#ffbb00', '#bb8800', '#ff0000')"></button>
-      <button class="theme-btn" style="background:#9900ff" onclick="setTheme('#9900ff', '#5500aa', '#00ffcc')"></button>
-      <button class="theme-btn" style="background:#ffffff" onclick="setTheme('#ffffff', '#555555', '#ff0000')"></button>
+      <button class="theme-btn" title="Cyan" style="background:#00f0ff" onclick="setTheme('#00f0ff', '#0855c4', '#ff0000')"></button>
+      <button class="theme-btn" title="Crimson" style="background:#ff0055" onclick="setTheme('#ff0055', '#990033', '#00f0ff')"></button>
+      <button class="theme-btn" title="Neon Green" style="background:#00ff66" onclick="setTheme('#00ff66', '#008833', '#ff0055')"></button>
+      <button class="theme-btn" title="Gold Amber" style="background:#ffbb00" onclick="setTheme('#ffbb00', '#bb8800', '#ff0000')"></button>
+      <button class="theme-btn" title="Deep Purple" style="background:#9900ff" onclick="setTheme('#9900ff', '#5500aa', '#00ffcc')"></button>
+      <button class="theme-btn" title="Electric Violet" style="background:#e000ff" onclick="setTheme('#e000ff', '#7000aa', '#00ffaa')"></button>
+      <button class="theme-btn" title="Acid Lime" style="background:#a6ff00" onclick="setTheme('#a6ff00', '#558800', '#ff0066')"></button>
+      <button class="theme-btn" title="Ice White" style="background:#ffffff" onclick="setTheme('#ffffff', '#555555', '#ff0000')"></button>
     </div>
 
-    <h3>ANIMATION THEME</h3>
+    <h3>ANIMATION THEMES (6)</h3>
     <div class="anim-options">
-      <button class="anim-btn active" id="btn-network" onclick="setAnimation('network')">CONNECTED NETWORK</button>
-      <button class="anim-btn" id="btn-matrix" onclick="setAnimation('matrix')">MATRIX CODE RAIN</button>
-      <button class="anim-btn" id="btn-stars" onclick="setAnimation('stars')">WARP SPEED STARS</button>
-      <button class="anim-btn" id="btn-hex" onclick="setAnimation('hex')">CYBER HEXAGONS</button>
+      <button class="anim-btn active" id="btn-network" onclick="setAnimation('network')">NETWORK</button>
+      <button class="anim-btn" id="btn-matrix" onclick="setAnimation('matrix')">MATRIX RAIN</button>
+      <button class="anim-btn" id="btn-stars" onclick="setAnimation('stars')">WARP STARS</button>
+      <button class="anim-btn" id="btn-hex" onclick="setAnimation('hex')">HEXAGONS</button>
+      <button class="anim-btn" id="btn-cubes" onclick="setAnimation('cubes')">3D CUBES</button>
+      <button class="anim-btn" id="btn-wave" onclick="setAnimation('wave')">WAVE GRID</button>
+    </div>
+
+    <h3>SIGNAL INTERVAL</h3>
+    <div class="timer-options">
+      <button class="timer-btn" id="t-30" onclick="setIntervalTime(30)">30s</button>
+      <button class="timer-btn active" id="t-60" onclick="setIntervalTime(60)">60s</button>
+      <button class="timer-btn" id="t-90" onclick="setIntervalTime(90)">90s</button>
     </div>
 
     <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
   </div>
 
-  <!-- টপ ব্যানার -->
-  <div class="top-banner" id="topBanner" title="Double click to change name">BLACKDOG AVIATOR</div>
+  <!-- টপ ব্যানার (লকড) -->
+  <div class="top-banner">BLACKDOG AVIATOR</div>
 
-  <!-- লোগো (নতুন ইমেজ লিঙ্ক সহ) -->
-  <input type="file" id="logoInput" style="display:none;" accept="image/*">
-  <img class="logo" id="logoImg" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" title="Double click to change logo" />
+  <!-- লোগো (লকড) -->
+  <img class="logo" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" />
 
-  <!-- ৯ ডিজিটের ইউআইডি সেট করার অপশন -->
+  <!-- কেবল এটাই ডাবল ক্লিকে পরিবর্তনযোগ্য -->
   <div class="uid-container">
-    <div class="uid-text" id="uidDisplay" title="Double click to set 9-digit UID">SET UID</div>
-    <span class="uid-hint">Double click to change 9-digit UID</span>
+    <div class="uid-text" id="uidDisplay" title="Double click to set UID">SET UID</div>
+    <span class="uid-hint">Double click to set 9-digit UID</span>
   </div>
 
   <div class="signal-circle-container">
@@ -346,7 +386,7 @@
   </div>
 
   <script>
-    // ====== UID SYSTEM ======
+    // ====== UID SYSTEM (ONLY THIS IS EDITABLE) ======
     const uidDisplay = document.getElementById('uidDisplay');
     const savedUID = localStorage.getItem('saved_user_uid');
     if (savedUID) {
@@ -358,49 +398,16 @@
       let input = prompt("Enter your 9-digit Game UID:", currentVal);
       if (input !== null) {
         input = input.trim();
-        // ৯ ডিজিটের নম্বর যাচাই
         if (/^\d{9}$/.test(input)) {
           localStorage.setItem('saved_user_uid', input);
           uidDisplay.textContent = `UID: ${input}`;
         } else {
-          alert("Please enter exactly a valid 9-digit UID (Numbers only)!");
+          alert("Invalid UID! Please enter exactly 9 digits (numbers only).");
         }
       }
     });
 
-    // ====== TOP BANNER & LOGO PERSISTENCE ======
-    const topBanner = document.getElementById('topBanner');
-    const logoImg = document.getElementById('logoImg');
-    const logoInput = document.getElementById('logoInput');
-
-    if(localStorage.getItem('saved_banner')) topBanner.textContent = localStorage.getItem('saved_banner');
-    if(localStorage.getItem('saved_logo')) logoImg.src = localStorage.getItem('saved_logo');
-
-    topBanner.addEventListener('dblclick', () => {
-      const newName = prompt("Enter Top Banner Name:", topBanner.textContent);
-      if(newName && newName.trim() !== "") {
-        topBanner.textContent = newName.trim();
-        localStorage.setItem('saved_banner', newName.trim());
-      }
-    });
-
-    logoImg.addEventListener('dblclick', () => {
-      logoInput.click();
-    });
-
-    logoInput.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          logoImg.src = e.target.result;
-          localStorage.setItem('saved_logo', e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // ====== THEME & MODAL ======
+    // ====== MODAL & THEMES ======
     function toggleSettings() {
       const modal = document.getElementById('settingsModal');
       modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
@@ -425,8 +432,16 @@
       setTheme(localStorage.getItem('theme_p'), localStorage.getItem('theme_s'), localStorage.getItem('theme_a'));
     }
 
-    // ====== MULTIPLE ANIMATION THEMES ======
+    // ====== DYNAMIC ANIMATION ENGINE (6 THEMES) ======
     let currentAnimation = localStorage.getItem('anim_theme') || 'network';
+    let maxInterval = parseInt(localStorage.getItem('signal_timer') || '60');
+
+    function setIntervalTime(sec) {
+      maxInterval = sec;
+      localStorage.setItem('signal_timer', sec);
+      document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`t-${sec}`).classList.add('active');
+    }
 
     function setAnimation(animName) {
       currentAnimation = animName;
@@ -439,20 +454,6 @@
       initAnimationTheme();
     }
 
-    // ====== FIREBASE SETUP ======
-    const firebaseConfig = {
-      apiKey: "AIzaSyCV8gnfgtQjA-IBrfV4aJdz2agbhXnML2I",
-      authDomain: "sunnyfuther.firebaseapp.com",
-      databaseURL: "https://sunnyfuther-default-rtdb.firebaseio.com",
-      projectId: "sunnyfuther",
-      storageBucket: "sunnyfuther.firebasestorage.app",
-      messagingSenderId: "1058855642796",
-      appId: "1:1058855642796:web:6ffff989a42905f8b7e109"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // ====== DYNAMIC CANVAS ENGINE ======
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -463,20 +464,19 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // 1. Network Objects
+    // অ্যানিমেশন অবজেক্টস
     let particles = [];
-    // 2. Matrix Objects
     let matrixColumns = [];
-    const matrixChars = "0123456789ABCDEF$#@%*+=-";
-    // 3. Stars Objects
+    const matrixChars = "0123456789ABCDEF$#@%*+-";
     let stars = [];
-    // 4. Hexagon Objects
     let hexagons = [];
+    let cubes = [];
+    let waveOffset = 0;
 
     function initAnimationTheme() {
       if (currentAnimation === 'network') {
         particles = [];
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < 50; i++) {
           particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -485,14 +485,12 @@
           });
         }
       } else if (currentAnimation === 'matrix') {
-        const colCount = Math.floor(canvas.width / 18);
+        const cols = Math.floor(canvas.width / 18);
         matrixColumns = [];
-        for (let i = 0; i < colCount; i++) {
-          matrixColumns[i] = Math.random() * -100;
-        }
+        for (let i = 0; i < cols; i++) matrixColumns[i] = Math.random() * -100;
       } else if (currentAnimation === 'stars') {
         stars = [];
-        for (let i = 0; i < 120; i++) {
+        for (let i = 0; i < 110; i++) {
           stars.push({
             x: (Math.random() - 0.5) * canvas.width,
             y: (Math.random() - 0.5) * canvas.height,
@@ -501,13 +499,25 @@
         }
       } else if (currentAnimation === 'hex') {
         hexagons = [];
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 22; i++) {
           hexagons.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 20 + 15,
+            size: Math.random() * 22 + 12,
             speedY: (Math.random() * 0.4) + 0.2,
             opacity: Math.random() * 0.4 + 0.1
+          });
+        }
+      } else if (currentAnimation === 'cubes') {
+        cubes = [];
+        for (let i = 0; i < 18; i++) {
+          cubes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 20 + 10,
+            rot: Math.random() * Math.PI,
+            rotSpeed: (Math.random() - 0.5) * 0.02,
+            speedY: Math.random() * 0.5 + 0.3
           });
         }
       }
@@ -523,6 +533,7 @@
     }
 
     function renderEngine() {
+      // ১. নেটওয়ার্ক
       if (currentAnimation === 'network') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -552,6 +563,7 @@
           }
         }
       } 
+      // ২. ম্যাট্রিক্স
       else if (currentAnimation === 'matrix') {
         ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -561,13 +573,11 @@
         for (let i = 0; i < matrixColumns.length; i++) {
           const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
           ctx.fillText(text, i * 18, matrixColumns[i]);
-
-          if (matrixColumns[i] > canvas.height && Math.random() > 0.975) {
-            matrixColumns[i] = 0;
-          }
+          if (matrixColumns[i] > canvas.height && Math.random() > 0.975) matrixColumns[i] = 0;
           matrixColumns[i] += 16;
         }
       } 
+      // ৩. স্টারস
       else if (currentAnimation === 'stars') {
         ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -594,6 +604,7 @@
           }
         }
       } 
+      // ৪. হেক্সাগন
       else if (currentAnimation === 'hex') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -611,13 +622,64 @@
           ctx.globalAlpha = 1.0;
         }
       }
+      // ৫. থ্রিডি কিউবস
+      else if (currentAnimation === 'cubes') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let c of cubes) {
+          c.y -= c.speedY;
+          c.rot += c.rotSpeed;
+          if (c.y < -40) {
+            c.y = canvas.height + 40;
+            c.x = Math.random() * canvas.width;
+          }
+          ctx.save();
+          ctx.translate(c.x, c.y);
+          ctx.rotate(c.rot);
+          ctx.strokeStyle = currentPrimaryColor;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(-c.size / 2, -c.size / 2, c.size, c.size);
+          ctx.restore();
+        }
+      }
+      // ৬. ওয়েভ গ্রিড
+      else if (currentAnimation === 'wave') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        waveOffset += 0.03;
+
+        ctx.strokeStyle = currentPrimaryColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 30) {
+          let y = canvas.height / 2 + Math.sin(x * 0.015 + waveOffset) * 60;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
 
       requestAnimationFrame(renderEngine);
     }
 
     resizeCanvas();
     setAnimation(currentAnimation);
+    setIntervalTime(maxInterval);
     renderEngine();
+
+    // ====== FIREBASE SETUP ======
+    const firebaseConfig = {
+      apiKey: "AIzaSyCV8gnfgtQjA-IBrfV4aJdz2agbhXnML2I",
+      authDomain: "sunnyfuther.firebaseapp.com",
+      databaseURL: "https://sunnyfuther-default-rtdb.firebaseio.com",
+      projectId: "sunnyfuther",
+      storageBucket: "sunnyfuther.firebasestorage.app",
+      messagingSenderId: "1058855642796",
+      appId: "1:1058855642796:web:6ffff989a42905f8b7e109"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
     // ====== SIGNAL LOGIC ======
     const signalDisplay = document.getElementById('signalDisplay');
@@ -628,7 +690,7 @@
     const progressText = document.getElementById('progressText');
 
     let loopStarted = false;
-    let timeRemains = 60;
+    let timeRemains = maxInterval;
     let timer = null;
 
     const waitingMessages = [
@@ -662,7 +724,7 @@
       const signal = getRandomSignal();
       const finalVal = signal.toFixed(2);
       
-      // Firebase-এ সিগন্যাল পাঠানো
+      // Firebase-এ ক্র্যাশ পয়েন্ট আপডেট
       db.ref('crashPoint').set(parseFloat(finalVal))
         .then(() => {
            waitingText.textContent = "SIGNAL ACTIVE IN GAME ✅";
@@ -685,7 +747,7 @@
     }
 
     function startCountdown() {
-      timeRemains = 60;
+      timeRemains = maxInterval;
       updateProgress();
 
       clearInterval(timer);
@@ -700,7 +762,7 @@
     }
 
     function updateProgress() {
-      const percent = 100 - (timeRemains / 60 * 100);
+      const percent = 100 - (timeRemains / maxInterval * 100);
       progressBar.style.width = `${percent}%`;
       progressText.textContent = `Auto Updating in ${timeRemains}s`;
     }
