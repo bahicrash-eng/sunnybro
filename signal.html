@@ -1,587 +1,719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLACK DOG HACKER // QUANTUM SIGNAL MATRIX</title>
-    
-    <!-- Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BLACKDOG AVIATOR - Signal Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    <!-- Firebase JS SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <style>
+    :root {
+      --primary-color: #00f0ff;
+      --secondary-color: #0855c4;
+      --accent-color: #ff0000;
+    }
 
-    <style>
-        :root {
-            --neon-red: #ff1a40;
-            --neon-glow: rgba(255, 26, 64, 0.6);
-            --bg-base: #060103;
-            --panel-bg: rgba(22, 2, 6, 0.88);
-            --border-red: rgba(255, 26, 64, 0.4);
-            --text-dim: #b05c6d;
-            
-            /* 4-Color Rotating Spectrum */
-            --c1: #ff0044;
-            --c2: #ff7700;
-            --c3: #ff00bb;
-            --c4: #8800ff;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font-family: 'Orbitron', monospace;
+    }
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Share Tech Mono', monospace;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+    /* সেটিংস বাটন */
+    .settings-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      font-size: 20px;
+      color: var(--primary-color);
+      cursor: pointer;
+      z-index: 1001;
+      background: rgba(0,0,0,0.65);
+      padding: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
+      transition: transform 0.3s;
+    }
+    .settings-btn:hover {
+      transform: rotate(90deg) scale(1.1);
+    }
 
-        html, body {
-            width: 100vw;
-            height: 100dvh;
-            background-color: var(--bg-base);
-            color: var(--neon-red);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+    /* সেটিংস মোডাল */
+    .settings-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #0d0f15;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 25px var(--primary-color);
+      padding: 20px;
+      border-radius: 15px;
+      z-index: 2000;
+      width: 320px;
+      text-align: center;
+    }
+    .settings-modal h3 {
+      color: var(--primary-color);
+      margin-bottom: 12px;
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
+    .theme-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .theme-btn {
+      height: 32px;
+      border-radius: 8px;
+      border: 2px solid #fff;
+      cursor: pointer;
+      outline: none;
+    }
+    .anim-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .anim-btn {
+      background: #191c24;
+      color: #fff;
+      border: 1px solid var(--primary-color);
+      padding: 8px;
+      border-radius: 6px;
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .anim-btn.active {
+      background: var(--primary-color);
+      color: #000;
+    }
+    .close-modal {
+      background: #ff0055;
+      color: white;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Orbitron', monospace;
+    }
 
-        /* CRT SCANLINES */
-        body::before {
-            content: " ";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(rgba(18, 0, 4, 0) 50%, rgba(0, 0, 0, 0.45) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 55, 0.03), rgba(0, 0, 0, 0.01), rgba(255, 0, 55, 0.03));
-            background-size: 100% 3px, 6px 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
+    /* টপ ব্যানার */
+    .top-banner {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Orbitron', monospace;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--primary-color);
+      background: rgba(0,0,0,0.65);
+      padding: 9px 18px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px var(--primary-color);
+      text-shadow: 0 0 8px var(--primary-color);
+      user-select: none;
+      z-index: 1000;
+      white-space: nowrap;
+      cursor: pointer;
+    }
 
-        #matrixCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0.32;
-        }
+    /* লোগো */
+    .logo {
+      display: block;
+      margin: 75px auto 12px; 
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 12px var(--primary-color));
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .logo:hover {
+      transform: scale(1.08);
+    }
 
-        /* MAIN APP CONTAINER */
-        .redx-container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 420px;
-            height: 100dvh;
-            padding: 20px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* ইউআইডি বাটন / টেক্সট */
+    .uid-container {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .uid-text {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--primary-color);
+      text-shadow: 0 0 15px var(--primary-color);
+      user-select: none;
+      cursor: pointer;
+      border: 1px dashed var(--primary-color);
+      padding: 5px 15px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .uid-hint {
+      display: block;
+      font-size: 9px;
+      color: #8893a2;
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
 
-        /* HEADER */
-        .header-box {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
+    /* সিগন্যাল ডিসপ্লে বৃত্ত */
+    .signal-circle-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .signal-circle {
+      width: 190px;
+      height: 190px;
+      border: 4px solid var(--accent-color);
+      border-radius: 50%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 900;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.35);
+    }
+    .signal-circle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--accent-color);
+    }
 
-        .redx-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px var(--neon-red), 0 0 25px var(--neon-red);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-align: center;
-        }
-        .redx-title span { color: var(--neon-red); }
+    /* বাটন */
+    .btn {
+      display: block;
+      width: 330px;
+      max-width: 90%;
+      margin: 15px auto;
+      padding: 12px;
+      background: linear-gradient(93.73deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      font-family: 'Orbitron', monospace;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      outline: none;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+    .btn:hover:not(:disabled) {
+      filter: saturate(1.5);
+    }
+    .btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-        .top-info-bar {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            margin-top: 6px;
-        }
+    /* প্রগ্রেস বার */
+    .progress-container {
+      width: 330px;
+      max-width: calc(100% - 30px);
+      height: 20px;
+      margin: 10px auto;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--primary-color);
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--primary-color);
+      width: 0%;
+      transition: width 1s linear;
+    }
+    .progress-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      font-weight: bold;
+    }
 
-        .promo-pill {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            color: #ffffff;
-            background: rgba(255, 26, 64, 0.1);
-            border: 1px dashed var(--neon-red);
-            padding: 4px 8px;
-            border-radius: 8px;
-        }
-
-        .status-badge {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .status-online {
-            color: #ffffff;
-            background: rgba(255, 26, 64, 0.25);
-            border: 1px solid var(--neon-red);
-            box-shadow: 0 0 12px rgba(255, 26, 64, 0.4);
-        }
-        .status-offline {
-            color: #ff859d;
-            background: rgba(40, 0, 8, 0.6);
-            border: 1px solid rgba(255, 26, 64, 0.35);
-        }
-
-        /* MAIN CARD */
-        .main-card {
-            width: 100%;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-red);
-            border-radius: 20px;
-            padding: 16px 14px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 0 35px rgba(255, 26, 64, 0.18);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-        }
-
-        /* DOUBLE-CLICK ID CARD */
-        .id-badge-card {
-            width: 100%;
-            background: linear-gradient(135deg, rgba(255, 26, 64, 0.12), rgba(20, 0, 5, 0.8));
-            border: 1.5px solid rgba(255, 26, 64, 0.5);
-            border-radius: 12px;
-            padding: 10px 14px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .id-view-mode {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .id-info-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .id-icon {
-            font-size: 20px;
-            color: var(--neon-red);
-        }
-
-        .id-label {
-            font-size: 10px;
-            color: var(--text-dim);
-            letter-spacing: 1.5px;
-            font-weight: 700;
-        }
-
-        .id-display-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--neon-red);
-        }
-
-        .id-hint-badge {
-            font-size: 10px;
-            color: #ff859d;
-            border: 1px solid rgba(255, 26, 64, 0.4);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 3px 8px;
-            border-radius: 6px;
-        }
-
-        .id-edit-mode {
-            display: none;
-            width: 100%;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .inline-id-input {
-            flex: 1;
-            height: 38px;
-            background: #000000;
-            border: 1.5px solid var(--neon-red);
-            border-radius: 8px;
-            color: #ffffff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
-            text-align: center;
-            outline: none;
-        }
-
-        .btn-save-id {
-            height: 38px;
-            padding: 0 14px;
-            background: var(--neon-red);
-            border: none;
-            border-radius: 8px;
-            color: #000000;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 900;
-            cursor: pointer;
-        }
-
-        /* 4-COLOR SPECTRUM HUD */
-        .hud-wrapper {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 4px 0;
-        }
-
-        .spectrum-ring {
-            position: absolute;
-            width: 206px;
-            height: 206px;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
-            mask: radial-gradient(transparent 66%, black 67%);
-            -webkit-mask: radial-gradient(transparent 66%, black 67%);
-            filter: drop-shadow(0 0 10px rgba(255, 0, 68, 0.8)) drop-shadow(0 0 20px rgba(136, 0, 255, 0.6));
-            animation: spinSpectrum 6s linear infinite;
-        }
-
-        .spectrum-glow-layer {
-            position: absolute;
-            width: 190px;
-            height: 190px;
-            border-radius: 50%;
-            background: conic-gradient(from 180deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
-            filter: blur(16px);
-            opacity: 0.35;
-            animation: spinSpectrumRev 8s linear infinite;
-        }
-
-        .dashed-radar-ring {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            border: 1.5px dashed rgba(255, 255, 255, 0.25);
-            animation: spinSpectrumRev 18s linear infinite;
-        }
-
-        .hud-inner-core {
-            position: absolute;
-            width: 135px;
-            height: 135px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 26, 64, 0.3);
-            background: radial-gradient(circle, rgba(255, 26, 64, 0.1) 0%, rgba(10, 0, 3, 0.8) 75%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hud-inner-ring {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            border-top: 2.5px solid var(--neon-red);
-            border-bottom: 2.5px solid var(--neon-red);
-            animation: spinSpectrum 4s linear infinite;
-        }
-
-        @keyframes spinSpectrum { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes spinSpectrumRev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
-
-        .spectrum-ring.turbo {
-            animation: spinSpectrum 1s linear infinite;
-            filter: drop-shadow(0 0 20px var(--c1)) drop-shadow(0 0 35px var(--c3));
-        }
-
-        .hud-center-content {
-            position: relative;
-            z-index: 8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hud-label {
-            font-size: 10px;
-            color: #ff99ae;
-            letter-spacing: 2px;
-            font-weight: 700;
-            background: rgba(0, 0, 0, 0.75);
-            padding: 2px 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 26, 64, 0.35);
-            margin-bottom: 2px;
-        }
-
-        .hud-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 42px;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 15px var(--neon-red), 0 0 35px var(--neon-red);
-        }
-
-        .btn-redx {
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(135deg, rgba(255, 26, 64, 0.25), rgba(80, 0, 15, 0.7));
-            color: #ffffff;
-            border: 1.5px solid var(--neon-red);
-            border-radius: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 26, 64, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-redx:hover {
-            background: var(--neon-red);
-            color: #000000;
-            box-shadow: 0 0 35px var(--neon-red);
-        }
-
-        .footer-brand {
-            font-size: 10px;
-            color: rgba(255, 26, 64, 0.65);
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-    </style>
+    .waiting {
+      text-align: center;
+      margin-top: 8px;
+      color: var(--primary-color);
+      min-height: 20px;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
 
-    <!-- MATRIX CANVAS -->
-    <canvas id="matrixCanvas"></canvas>
+  <!-- সেটিংস বাটন -->
+  <div class="settings-btn" onclick="toggleSettings()"><i class="fas fa-gear"></i></div>
 
-    <!-- MAIN INTERFACE -->
-    <div class="redx-container" id="mainContainer">
-        
-        <!-- HEADER -->
-        <div class="header-box">
-            <h1 class="redx-title"><i class="fas fa-terminal"></i> BLACK DOG <span>HACKER</span></h1>
-            <div class="top-info-bar">
-                <div class="promo-pill"><i class="fas fa-shield-alt"></i> SYSTEM ACTIVE</div>
-                <div class="status-badge status-offline" id="statusBadge">
-                    <i class="fas fa-wifi"></i> ACTIVE UID
-                </div>
-            </div>
-        </div>
-
-        <!-- MAIN CARD -->
-        <div class="main-card">
-            
-            <!-- DOUBLE-CLICK ID CARD (ABOVE SIGNAL) -->
-            <div class="id-badge-card" id="idBadgeCard" ondblclick="enableIdEdit()">
-                <div class="id-view-mode" id="idViewMode">
-                    <div class="id-info-left">
-                        <i class="fas fa-fingerprint id-icon"></i>
-                        <div>
-                            <div class="id-label">AUTHORIZED ID CODE</div>
-                            <div class="id-display-value" id="idDisplayVal">348899728</div>
-                        </div>
-                    </div>
-                    <div class="id-hint-badge"><i class="fas fa-pen"></i> DBL TAP</div>
-                </div>
-
-                <div class="id-edit-mode" id="idEditMode" style="display: none;">
-                    <input type="text" maxlength="9" id="inlineIdInput" class="inline-id-input" placeholder="9-DIGIT ID">
-                    <button type="button" class="btn-save-id" onclick="saveIdCode()"><i class="fas fa-check"></i> SAVE</button>
-                </div>
-            </div>
-
-            <!-- 4-COLOR ROTATING SPECTRUM HUD -->
-            <div class="hud-wrapper">
-                <div class="spectrum-glow-layer"></div>
-                <div class="spectrum-ring" id="spectrumHalo"></div>
-                <div class="dashed-radar-ring"></div>
-
-                <div class="hud-inner-core">
-                    <div class="hud-inner-ring"></div>
-                </div>
-
-                <div class="hud-center-content">
-                    <span class="hud-label">SIGNAL</span>
-                    <span class="hud-value" id="displaySignal">1.00x</span>
-                </div>
-            </div>
-
-            <!-- GENERATE BUTTON -->
-            <button class="btn-redx" id="btnGenerate" onclick="getSignal()">
-                <i class="fas fa-bolt"></i> GENERATE SIGNAL
-            </button>
-        </div>
-
-        <div class="footer-brand">
-            BLACK DOG HACKER // QUANTUM MATRIX
-        </div>
+  <!-- সেটিংস মোডাল -->
+  <div class="settings-modal" id="settingsModal">
+    <h3>SELECT COLOR THEME</h3>
+    <div class="theme-options">
+      <button class="theme-btn" style="background:#00f0ff" onclick="setTheme('#00f0ff', '#0855c4', '#ff0000')"></button>
+      <button class="theme-btn" style="background:#ff0055" onclick="setTheme('#ff0055', '#990033', '#00f0ff')"></button>
+      <button class="theme-btn" style="background:#00ff66" onclick="setTheme('#00ff66', '#008833', '#ff0055')"></button>
+      <button class="theme-btn" style="background:#ffbb00" onclick="setTheme('#ffbb00', '#bb8800', '#ff0000')"></button>
+      <button class="theme-btn" style="background:#9900ff" onclick="setTheme('#9900ff', '#5500aa', '#00ffcc')"></button>
+      <button class="theme-btn" style="background:#ffffff" onclick="setTheme('#ffffff', '#555555', '#ff0000')"></button>
     </div>
 
-    <script>
-        const SECRET_CODE = "348899728";
-        let isFirebaseConnected = false;
-        let currentUserId = "348899728";
+    <h3>ANIMATION THEME</h3>
+    <div class="anim-options">
+      <button class="anim-btn active" id="btn-network" onclick="setAnimation('network')">CONNECTED NETWORK</button>
+      <button class="anim-btn" id="btn-matrix" onclick="setAnimation('matrix')">MATRIX CODE RAIN</button>
+      <button class="anim-btn" id="btn-stars" onclick="setAnimation('stars')">WARP SPEED STARS</button>
+      <button class="anim-btn" id="btn-hex" onclick="setAnimation('hex')">CYBER HEXAGONS</button>
+    </div>
 
-        // MATRIX BACKGROUND
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+    <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
+  </div>
 
-        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZBDH';
-        const fontSize = 14;
-        let columns = Math.floor(canvas.width / fontSize);
-        let drops = Array(columns).fill(1);
+  <!-- টপ ব্যানার -->
+  <div class="top-banner" id="topBanner" title="Double click to change name">BLACKDOG AVIATOR</div>
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(6, 1, 3, 0.12)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ff1a40';
-            ctx.font = fontSize + 'px "Share Tech Mono"';
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
+  <!-- লোগো (নতুন ইমেজ লিঙ্ক সহ) -->
+  <input type="file" id="logoInput" style="display:none;" accept="image/*">
+  <img class="logo" id="logoImg" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" title="Double click to change logo" />
+
+  <!-- ৯ ডিজিটের ইউআইডি সেট করার অপশন -->
+  <div class="uid-container">
+    <div class="uid-text" id="uidDisplay" title="Double click to set 9-digit UID">SET UID</div>
+    <span class="uid-hint">Double click to change 9-digit UID</span>
+  </div>
+
+  <div class="signal-circle-container">
+    <div class="signal-circle" id="signalDisplay">SIGNAL</div>
+  </div>
+
+  <div class="waiting" id="waitingText"></div>
+
+  <button class="btn" id="signalBtn">Start Signal</button>
+
+  <div class="progress-container" id="progressContainer" style="display:none;">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-text" id="progressText">Auto Updating in 60s</div>
+  </div>
+
+  <script>
+    // ====== UID SYSTEM ======
+    const uidDisplay = document.getElementById('uidDisplay');
+    const savedUID = localStorage.getItem('saved_user_uid');
+    if (savedUID) {
+      uidDisplay.textContent = `UID: ${savedUID}`;
+    }
+
+    uidDisplay.addEventListener('dblclick', () => {
+      let currentVal = localStorage.getItem('saved_user_uid') || '';
+      let input = prompt("Enter your 9-digit Game UID:", currentVal);
+      if (input !== null) {
+        input = input.trim();
+        // ৯ ডিজিটের নম্বর যাচাই
+        if (/^\d{9}$/.test(input)) {
+          localStorage.setItem('saved_user_uid', input);
+          uidDisplay.textContent = `UID: ${input}`;
+        } else {
+          alert("Please enter exactly a valid 9-digit UID (Numbers only)!");
         }
-        setInterval(drawMatrix, 35);
+      }
+    });
 
-        // FIREBASE SETUP
-        const firebaseConfig = {
-            apiKey: "AIzaSyCDycD8m6GFSXfFkg5yTdkhZYJrjwuU9mQ",
-            authDomain: "freefiremagick-b0b1c.firebaseapp.com",
-            databaseURL: "https://freefiremagick-b0b1c-default-rtdb.firebaseio.com",
-            projectId: "freefiremagick-b0b1c",
-            storageBucket: "freefiremagick-b0b1c.firebasestorage.app",
-            messagingSenderId: "28065563036",
-            appId: "1:28065563036:web:547a795ab213f8b35fc859",
-            measurementId: "G-TG2CVWCBWM"
+    // ====== TOP BANNER & LOGO PERSISTENCE ======
+    const topBanner = document.getElementById('topBanner');
+    const logoImg = document.getElementById('logoImg');
+    const logoInput = document.getElementById('logoInput');
+
+    if(localStorage.getItem('saved_banner')) topBanner.textContent = localStorage.getItem('saved_banner');
+    if(localStorage.getItem('saved_logo')) logoImg.src = localStorage.getItem('saved_logo');
+
+    topBanner.addEventListener('dblclick', () => {
+      const newName = prompt("Enter Top Banner Name:", topBanner.textContent);
+      if(newName && newName.trim() !== "") {
+        topBanner.textContent = newName.trim();
+        localStorage.setItem('saved_banner', newName.trim());
+      }
+    });
+
+    logoImg.addEventListener('dblclick', () => {
+      logoInput.click();
+    });
+
+    logoInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logoImg.src = e.target.result;
+          localStorage.setItem('saved_logo', e.target.result);
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        reader.readAsDataURL(file);
+      }
+    });
 
-        // AUTO INITIALIZE UID ON LOAD
-        window.addEventListener('DOMContentLoaded', () => {
-            applyIdAuthorization(currentUserId);
+    // ====== THEME & MODAL ======
+    function toggleSettings() {
+      const modal = document.getElementById('settingsModal');
+      modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+    }
+
+    let currentParticleColor = '#ff0000';
+    let currentPrimaryColor = '#00f0ff';
+
+    function setTheme(p, s, a) {
+      document.documentElement.style.setProperty('--primary-color', p);
+      document.documentElement.style.setProperty('--secondary-color', s);
+      document.documentElement.style.setProperty('--accent-color', a);
+      currentParticleColor = a;
+      currentPrimaryColor = p;
+
+      localStorage.setItem('theme_p', p);
+      localStorage.setItem('theme_s', s);
+      localStorage.setItem('theme_a', a);
+    }
+
+    if(localStorage.getItem('theme_p')) {
+      setTheme(localStorage.getItem('theme_p'), localStorage.getItem('theme_s'), localStorage.getItem('theme_a'));
+    }
+
+    // ====== MULTIPLE ANIMATION THEMES ======
+    let currentAnimation = localStorage.getItem('anim_theme') || 'network';
+
+    function setAnimation(animName) {
+      currentAnimation = animName;
+      localStorage.setItem('anim_theme', animName);
+      
+      document.querySelectorAll('.anim-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${animName}`);
+      if(activeBtn) activeBtn.classList.add('active');
+
+      initAnimationTheme();
+    }
+
+    // ====== FIREBASE SETUP ======
+    const firebaseConfig = {
+      apiKey: "AIzaSyCV8gnfgtQjA-IBrfV4aJdz2agbhXnML2I",
+      authDomain: "sunnyfuther.firebaseapp.com",
+      databaseURL: "https://sunnyfuther-default-rtdb.firebaseio.com",
+      projectId: "sunnyfuther",
+      storageBucket: "sunnyfuther.firebasestorage.app",
+      messagingSenderId: "1058855642796",
+      appId: "1:1058855642796:web:6ffff989a42905f8b7e109"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ====== DYNAMIC CANVAS ENGINE ======
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initAnimationTheme();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // 1. Network Objects
+    let particles = [];
+    // 2. Matrix Objects
+    let matrixColumns = [];
+    const matrixChars = "0123456789ABCDEF$#@%*+=-";
+    // 3. Stars Objects
+    let stars = [];
+    // 4. Hexagon Objects
+    let hexagons = [];
+
+    function initAnimationTheme() {
+      if (currentAnimation === 'network') {
+        particles = [];
+        for (let i = 0; i < 60; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speedX: (Math.random() - 0.5) * 0.7,
+            speedY: (Math.random() - 0.5) * 0.7
+          });
+        }
+      } else if (currentAnimation === 'matrix') {
+        const colCount = Math.floor(canvas.width / 18);
+        matrixColumns = [];
+        for (let i = 0; i < colCount; i++) {
+          matrixColumns[i] = Math.random() * -100;
+        }
+      } else if (currentAnimation === 'stars') {
+        stars = [];
+        for (let i = 0; i < 120; i++) {
+          stars.push({
+            x: (Math.random() - 0.5) * canvas.width,
+            y: (Math.random() - 0.5) * canvas.height,
+            z: Math.random() * canvas.width
+          });
+        }
+      } else if (currentAnimation === 'hex') {
+        hexagons = [];
+        for (let i = 0; i < 25; i++) {
+          hexagons.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 20 + 15,
+            speedY: (Math.random() * 0.4) + 0.2,
+            opacity: Math.random() * 0.4 + 0.1
+          });
+        }
+      }
+    }
+
+    function drawHexagon(x, y, r) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        ctx.lineTo(x + r * Math.cos(i * 2 * Math.PI / 6), y + r * Math.sin(i * 2 * Math.PI / 6));
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function renderEngine() {
+      if (currentAnimation === 'network') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
+          let p = particles[i];
+          p.x += p.speedX; p.y += p.speedY;
+          if (p.x > canvas.width || p.x < 0) p.speedX *= -1;
+          if (p.y > canvas.height || p.y < 0) p.speedY *= -1;
+
+          ctx.fillStyle = currentParticleColor;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            let p2 = particles[j];
+            let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (dist < 130) {
+              ctx.strokeStyle = `rgba(255, 255, 255, ${(130 - dist) / 130 * 0.25})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      } 
+      else if (currentAnimation === 'matrix') {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = currentPrimaryColor;
+        ctx.font = "14px monospace";
+
+        for (let i = 0; i < matrixColumns.length; i++) {
+          const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+          ctx.fillText(text, i * 18, matrixColumns[i]);
+
+          if (matrixColumns[i] > canvas.height && Math.random() > 0.975) {
+            matrixColumns[i] = 0;
+          }
+          matrixColumns[i] += 16;
+        }
+      } 
+      else if (currentAnimation === 'stars') {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        for (let s of stars) {
+          s.z -= 4;
+          if (s.z <= 0) {
+            s.z = canvas.width;
+            s.x = (Math.random() - 0.5) * canvas.width;
+            s.y = (Math.random() - 0.5) * canvas.height;
+          }
+          let k = 128.0 / s.z;
+          let px = s.x * k + cx;
+          let py = s.y * k + cy;
+
+          if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+            let size = (1 - s.z / canvas.width) * 3;
+            ctx.fillStyle = currentPrimaryColor;
+            ctx.beginPath();
+            ctx.arc(px, py, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      } 
+      else if (currentAnimation === 'hex') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let hex of hexagons) {
+          hex.y -= hex.speedY;
+          if (hex.y < -30) {
+            hex.y = canvas.height + 30;
+            hex.x = Math.random() * canvas.width;
+          }
+          ctx.strokeStyle = currentPrimaryColor;
+          ctx.globalAlpha = hex.opacity;
+          ctx.lineWidth = 1.5;
+          drawHexagon(hex.x, hex.y, hex.size);
+          ctx.globalAlpha = 1.0;
+        }
+      }
+
+      requestAnimationFrame(renderEngine);
+    }
+
+    resizeCanvas();
+    setAnimation(currentAnimation);
+    renderEngine();
+
+    // ====== SIGNAL LOGIC ======
+    const signalDisplay = document.getElementById('signalDisplay');
+    const signalBtn = document.getElementById('signalBtn');
+    const waitingText = document.getElementById('waitingText');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    let loopStarted = false;
+    let timeRemains = 60;
+    let timer = null;
+
+    const waitingMessages = [
+      "Connecting to Game Hash...",
+      "Analyzing Round Sequence...",
+      "Extracting UID Data...",
+      "Syncing with Aviator Game...",
+      "Signal Ready..."
+    ];
+
+    function getRandomSignal() {
+      const rand = Math.random();
+      if (rand < 0.8) {
+        return parseFloat((Math.random() * (3.70 - 2.10) + 2.10).toFixed(2));
+      } else {
+        return parseFloat((Math.random() * (7.00 - 1.10) + 1.10).toFixed(2));
+      }
+    }
+
+    async function generateSignal() {
+      signalBtn.disabled = true;
+      signalDisplay.textContent = "WAIT...";
+      
+      let msgInterval = setInterval(() => {
+          waitingText.textContent = waitingMessages[Math.floor(Math.random() * waitingMessages.length)];
+      }, 300);
+
+      await new Promise(r => setTimeout(r, 2000));
+      clearInterval(msgInterval);
+
+      const signal = getRandomSignal();
+      const finalVal = signal.toFixed(2);
+      
+      // Firebase-এ সিগন্যাল পাঠানো
+      db.ref('crashPoint').set(parseFloat(finalVal))
+        .then(() => {
+           waitingText.textContent = "SIGNAL ACTIVE IN GAME ✅";
+           waitingText.style.color = "#00ff00";
+        })
+        .catch((err) => {
+           waitingText.textContent = "SERVER ERROR ❌";
+           waitingText.style.color = "red";
         });
 
-        // ID LOGIC & STATUS
-        function applyIdAuthorization(idValue) {
-            currentUserId = idValue;
-            document.getElementById('idDisplayVal').innerText = idValue;
-            const statusBadge = document.getElementById('statusBadge');
+      signalDisplay.textContent = `${finalVal}x`;
+      signalBtn.disabled = false;
 
-            if (idValue === SECRET_CODE) {
-                isFirebaseConnected = true;
-                db.goOnline();
-                statusBadge.className = "status-badge status-online";
-                statusBadge.innerHTML = '<i class="fas fa-wifi"></i> ACTIVE UID';
-            } else {
-                isFirebaseConnected = false;
-                db.goOffline();
-                statusBadge.className = "status-badge status-offline";
-                statusBadge.innerHTML = '<i class="fas fa-wifi-slash"></i> ACTIVE UID';
-            }
+      if (!loopStarted) {
+        loopStarted = true;
+        signalBtn.textContent = "NEXT SIGNAL";
+        progressContainer.style.display = "block";
+        startCountdown();
+      }
+    }
+
+    function startCountdown() {
+      timeRemains = 60;
+      updateProgress();
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeRemains--;
+        updateProgress();
+        if (timeRemains <= 0) {
+          clearInterval(timer);
+          generateSignal();
         }
+      }, 1000);
+    }
 
-        function enableIdEdit() {
-            document.getElementById('idViewMode').style.display = 'none';
-            document.getElementById('idEditMode').style.display = 'flex';
-            const input = document.getElementById('inlineIdInput');
-            input.value = currentUserId;
-            input.focus();
-        }
+    function updateProgress() {
+      const percent = 100 - (timeRemains / 60 * 100);
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `Auto Updating in ${timeRemains}s`;
+    }
 
-        function saveIdCode() {
-            const inputVal = document.getElementById('inlineIdInput').value.trim();
-            if (inputVal.length !== 9 || isNaN(inputVal)) {
-                alert("Please enter a valid 9-digit User ID!");
-                return;
-            }
-            applyIdAuthorization(inputVal);
-            document.getElementById('idEditMode').style.display = 'none';
-            document.getElementById('idViewMode').style.display = 'flex';
-        }
-
-        // SIGNAL GENERATION
-        let isGenerating = false;
-        function getSignal() {
-            if (isGenerating) return;
-            isGenerating = true;
-
-            const displaySignal = document.getElementById('displaySignal');
-            const spectrumHalo = document.getElementById('spectrumHalo');
-            const btn = document.getElementById('btnGenerate');
-
-            spectrumHalo.classList.add('turbo');
-            btn.disabled = true;
-
-            let targetMultiplier = parseFloat((Math.random() * 8.5 + 1.25).toFixed(2));
-            let currentVal = 1.00;
-            let step = (targetMultiplier - 1.00) / 25;
-
-            let countUp = setInterval(() => {
-                currentVal += step;
-                if (currentVal >= targetMultiplier) {
-                    currentVal = targetMultiplier;
-                    clearInterval(countUp);
-                    displaySignal.innerText = targetMultiplier.toFixed(2) + "x";
-                    spectrumHalo.classList.remove('turbo');
-                    btn.disabled = false;
-                    isGenerating = false;
-
-                    if (isFirebaseConnected) {
-                        db.ref('crashPoint').set(targetMultiplier);
-                    }
-                } else {
-                    displaySignal.innerText = currentVal.toFixed(2) + "x";
-                }
-            }, 30);
-        }
-    </script>
+    signalBtn.addEventListener('click', () => {
+      if (loopStarted) {
+        clearInterval(timer);
+        generateSignal();
+        startCountdown();
+      } else {
+        generateSignal();
+      }
+    });
+  </script>
 </body>
 </html>
