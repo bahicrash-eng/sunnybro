@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1WIN | Device Key Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Firebase SDK (v8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --bg: #07090e;
+            --card-bg: #0f1420;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #0084ff;
+            --cyan: #00d2ff;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #fff;
+        }
+
+        body {
+            background: var(--bg);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 span {
+            color: var(--cyan);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .stat-card .num {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: var(--cyan);
+            margin-top: 5px;
+        }
+
+        .panel-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .panel-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gen-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            min-width: 200px;
+            background: #080b12;
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--cyan);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            filter: brightness(1.15);
+            transform: translateY(-2px);
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 14px 16px;
+            color: #94a3b8;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .badge.unused { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+
+        .key-text {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #38bdf8;
+            background: rgba(0, 210, 255, 0.08);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+
+        .btn-reset { background: #334155; color: #fff; }
+        .btn-del { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-copy { background: rgba(0, 210, 255, 0.15); color: #00d2ff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fa-solid fa-shield-halved"></i> 1WIN <span>Key Master</span></h1>
+            <div style="font-size: 13px; color: #94a3b8;"><i class="fa-solid fa-server"></i> Cloud DB Connected</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="color: #94a3b8; font-size: 13px;">Total Keys Created</div>
+                <div class="num" id="totalKeys">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color: #94a3b8; font-size: 13px;">Locked to Devices</div>
+                <div class="num" id="activeKeys" style="color: #10b981;">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color: #94a3b8; font-size: 13px;">Unused Keys</div>
+                <div class="num" id="unusedKeys" style="color: #eab308;">0</div>
+            </div>
+        </div>
+
+        <!-- GENERATE NEW KEY -->
+        <div class="panel-card">
+            <h3><i class="fa-solid fa-plus-circle"></i> Generate New One-Device Key</h3>
+            <div class="gen-row">
+                <input type="text" id="customKey" placeholder="Custom Key (leave empty for auto random)">
+                <input type="text" id="userNote" placeholder="User Name / Note (e.g. VIP User 1)">
+                <button class="btn" onclick="generateKey()">
+                    <i class="fa-solid fa-key"></i> Create Key
+                </button>
+            </div>
+        </div>
+
+        <!-- KEYS LIST TABLE -->
+        <div class="panel-card">
+            <h3><i class="fa-solid fa-list-check"></i> Active Device Keys</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key / Password</th>
+                            <th>Note</th>
+                            <th>Status</th>
+                            <th>Locked Device ID</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keysTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#94a3b8;">Loading keys...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Setup
+        const firebaseConfig = {
+          apiKey: "AIzaSyCV8gnfgtQjA-IBrfV4aJdz2agbhXnML2I",
+          authDomain: "sunnyfuther.firebaseapp.com",
+          databaseURL: "https://sunnyfuther-default-rtdb.firebaseio.com",
+          projectId: "sunnyfuther",
+          storageBucket: "sunnyfuther.firebasestorage.app",
+          messagingSenderId: "1058855642796",
+          appId: "1:1058855642796:web:6ffff989a42905f8b7e109"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Realtime Listener
+        db.ref('device_keys').on('value', snapshot => {
+            const data = snapshot.val();
+            const tbody = document.getElementById('keysTableBody');
+            tbody.innerHTML = '';
+
+            if(!data) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No keys generated yet.</td></tr>`;
+                updateCounters(0, 0, 0);
+                return;
+            }
+
+            let total = 0, active = 0, unused = 0;
+
+            Object.keys(data).forEach(key => {
+                total++;
+                const item = data[key];
+                const isBound = item.boundDeviceId ? true : false;
+                if(isBound) active++; else unused++;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="key-text">${key}</span></td>
+                    <td>${item.note || 'None'}</td>
+                    <td><span class="badge ${isBound ? 'active' : 'unused'}">${isBound ? 'Bound' : 'Available'}</span></td>
+                    <td><small style="color:${isBound ? '#38bdf8' : '#64748b'}">${item.boundDeviceId || 'Not bound yet'}</small></td>
+                    <td><small style="color:#94a3b8">${new Date(item.createdAt).toLocaleDateString()}</small></td>
+                    <td>
+                        <button class="btn-action btn-copy" onclick="copyKey('${key}')"><i class="fa-regular fa-copy"></i> Copy</button>
+                        ${isBound ? `<button class="btn-action btn-reset" onclick="resetDevice('${key}')"><i class="fa-solid fa-rotate-left"></i> Unlock Device</button>` : ''}
+                        <button class="btn-action btn-del" onclick="deleteKey('${key}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateCounters(total, active, unused);
+        });
+
+        function updateCounters(total, active, unused) {
+            document.getElementById('totalKeys').innerText = total;
+            document.getElementById('activeKeys').innerText = active;
+            document.getElementById('unusedKeys').innerText = unused;
+        }
+
+        // Generate Key
+        function generateKey() {
+            let key = document.getElementById('customKey').value.trim();
+            const note = document.getElementById('userNote').value.trim();
+
+            if(!key) {
+                // Generate format: 1WIN-XXXX-XXXX
+                key = '1WIN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            }
+
+            db.ref('device_keys/' + key).set({
+                createdAt: Date.now(),
+                note: note || 'General User',
+                status: 'unused',
+                boundDeviceId: null
+            }).then(() => {
+                document.getElementById('customKey').value = '';
+                document.getElementById('userNote').value = '';
+                alert('Key created successfully: ' + key);
+            });
+        }
+
+        // Copy Key
+        function copyKey(key) {
+            navigator.clipboard.writeText(key);
+            alert('Copied to clipboard: ' + key);
+        }
+
+        // Reset Device (Allow new device to use this key)
+        function resetDevice(key) {
+            if(confirm('Are you sure you want to unlock this device? The user will have to enter the key again, or another device can use it.')) {
+                db.ref('device_keys/' + key).update({
+                    boundDeviceId: null,
+                    status: 'unused'
+                });
+            }
+        }
+
+        // Delete Key
+        function deleteKey(key) {
+            if(confirm('Delete this key permanently?')) {
+                db.ref('device_keys/' + key).remove();
+            }
+        }
+    </script>
+</body>
+</html>
