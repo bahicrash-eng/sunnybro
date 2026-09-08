@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>1WIN | Ultimate Gaming Hub</title>
-    
-    <!-- Web Favicon -->
+    <title>1WIN </title>
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/443fxwbzx/44kbmurbf/1Win_icon-removebg-preview.png">
-    <link rel="shortcut icon" type="image/png" href="https://uploads.onecompiler.io/443fxwbzx/44kbmurbf/1Win_icon-removebg-preview.png">
     
-    <!-- Premium Fonts -->
+    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,17 +18,18 @@
 
     <style>
         :root {
-            --bg-base: #07090e;
-            --surface-1: #0f131d;
-            --surface-2: #161b26;
+            --bg-base: #04060a;
+            --surface-1: #0b0f19;
+            --surface-2: #121826;
             --border-glass: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(0, 210, 255, 0.4);
-            --primary-gradient: linear-gradient(135deg, #0072ff 0%, #00d2ff 100%);
+            --border-glow: rgba(0, 210, 255, 0.4);
+            --primary-gradient: linear-gradient(135deg, #0062ff 0%, #00d2ff 100%);
             --accent-glow: rgba(0, 210, 255, 0.25);
-            --accent-green: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            --accent-green: #10b981;
+            --danger-color: #f43f5e;
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-muted: #475569;
         }
 
         * {
@@ -46,9 +44,9 @@
         body {
             background-color: var(--bg-base);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 114, 255, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(255, 75, 43, 0.08) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.8) 0px, transparent 100%);
+                radial-gradient(circle at 10% 10%, rgba(0, 98, 255, 0.12) 0px, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.08) 0px, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(11, 15, 25, 0.95) 0px, transparent 100%);
             background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
@@ -57,31 +55,32 @@
             flex-direction: column;
         }
 
-        /* Ambient Glow Background Element */
+        /* Ambient Glow */
         .ambient-glow {
             position: fixed;
-            top: -20%;
+            top: -150px;
             left: 50%;
             transform: translateX(-50%);
-            width: 700px;
+            width: 800px;
             height: 400px;
-            background: radial-gradient(circle, rgba(0, 114, 255, 0.18), transparent 70%);
-            filter: blur(80px);
+            background: radial-gradient(circle, rgba(0, 140, 255, 0.2), transparent 70%);
+            filter: blur(100px);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* TOP NAVIGATION / STATUS BAR */
+        /* Top Navigation */
         .top-nav {
-            position: relative;
-            z-index: 10;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 30px;
+            padding: 16px 28px;
             border-bottom: 1px solid var(--border-glass);
-            backdrop-filter: blur(16px);
-            background: rgba(7, 9, 14, 0.6);
+            backdrop-filter: blur(20px);
+            background: rgba(4, 6, 10, 0.7);
         }
 
         .brand {
@@ -90,32 +89,51 @@
             gap: 12px;
             font-family: 'Outfit', sans-serif;
             font-weight: 900;
-            font-size: 22px;
+            font-size: 24px;
             letter-spacing: 0.5px;
         }
 
         .brand img {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(0, 114, 255, 0.6));
+            filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.5));
         }
 
         .brand-text {
-            background: linear-gradient(90deg, #ffffff, #c7d2fe);
+            background: linear-gradient(90deg, #ffffff, #93c5fd);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .brand-badge {
             background: var(--primary-gradient);
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 6px;
             font-size: 10px;
             font-weight: 800;
             letter-spacing: 1px;
             color: #fff;
-            box-shadow: 0 0 12px rgba(0, 210, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .device-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .live-status {
@@ -124,28 +142,28 @@
             gap: 8px;
             padding: 6px 14px;
             border-radius: 50px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-glass);
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
             font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-weight: 700;
+            color: #34d399;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #22c55e;
+            width: 7px;
+            height: 7px;
+            background-color: #34d399;
             border-radius: 50%;
-            box-shadow: 0 0 10px #22c55e;
-            animation: pulseDot 2s infinite ease-in-out;
+            box-shadow: 0 0 10px #34d399;
+            animation: pulseDot 2s infinite;
         }
 
         @keyframes pulseDot {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); opacity: 0.6; }
+            50% { transform: scale(1.4); opacity: 0.5; }
         }
 
-        /* LOBBY SCREEN */
+        /* Lobby Screen */
         #lobby-container {
             position: relative;
             z-index: 2;
@@ -153,40 +171,41 @@
             flex-direction: column;
             align-items: center;
             flex: 1;
-            padding: 40px 20px 60px;
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px 20px 70px;
+            transition: filter 0.3s ease;
         }
 
         .hero-banner {
             text-align: center;
-            max-width: 650px;
+            max-width: 680px;
             margin-bottom: 45px;
         }
 
         .hero-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 6px 16px;
             border-radius: 30px;
-            background: rgba(0, 114, 255, 0.1);
-            border: 1px solid rgba(0, 114, 255, 0.3);
+            background: rgba(0, 210, 255, 0.08);
+            border: 1px solid rgba(0, 210, 255, 0.25);
             color: #38bdf8;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .hero-banner h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(28px, 5vw, 44px);
+            font-size: clamp(30px, 5vw, 46px);
             font-weight: 900;
-            letter-spacing: -0.5px;
             line-height: 1.15;
             background: linear-gradient(180deg, #FFFFFF 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .hero-banner p {
@@ -195,7 +214,7 @@
             line-height: 1.6;
         }
 
-        /* GAMES GRID */
+        /* Games Grid */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -204,10 +223,9 @@
             max-width: 1200px;
         }
 
-        /* MODERN GAME CARD */
         .game-card {
             position: relative;
-            background: linear-gradient(180deg, rgba(22, 27, 38, 0.8) 0%, rgba(15, 19, 29, 0.95) 100%);
+            background: linear-gradient(180deg, rgba(18, 24, 38, 0.75) 0%, rgba(11, 15, 25, 0.95) 100%);
             border-radius: 20px;
             border: 1px solid var(--border-glass);
             overflow: hidden;
@@ -216,24 +234,13 @@
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .game-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .game-card:hover {
             transform: translateY(-8px);
-            border-color: var(--border-hover);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+            border-color: var(--border-glow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
         }
 
         .card-preview {
@@ -242,7 +249,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle, #1a2233 0%, #0c1017 100%);
+            background: radial-gradient(circle, #1a2336 0%, #080c14 100%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             overflow: hidden;
         }
@@ -289,7 +296,6 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 6px;
-            letter-spacing: 0.2px;
         }
 
         .game-desc {
@@ -324,49 +330,12 @@
             transition: all 0.25s ease;
         }
 
-        .play-btn i {
-            font-size: 12px;
-            transition: transform 0.2s ease;
-        }
-
         .game-card:hover .play-btn {
             box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
             filter: brightness(1.1);
         }
 
-        .game-card:hover .play-btn i {
-            transform: translateX(4px);
-        }
-
-        /* EMPTY & LOADER STATES */
-        .state-container {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 70px 20px;
-            text-align: center;
-            background: rgba(15, 19, 29, 0.4);
-            border: 1px dashed var(--border-glass);
-            border-radius: 20px;
-        }
-
-        .loader-ring {
-            width: 44px;
-            height: 44px;
-            border: 3px solid rgba(0, 210, 255, 0.15);
-            border-top: 3px solid #00d2ff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 18px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* FULLSCREEN GAME VIEW */
+        /* Fullscreen Game Frame */
         #game-view {
             display: none;
             position: fixed;
@@ -384,74 +353,241 @@
             top: 16px;
             left: 16px;
             z-index: 999999;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
             padding: 8px 18px;
             border-radius: 50px;
             font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.5px;
             cursor: pointer;
             backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
             transition: all 0.25s ease;
         }
 
         .floating-back-btn:hover {
             background: #ef4444;
-            border-color: #ef4444;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
         }
 
         #game-frame {
             width: 100%;
             height: 100%;
             border: none;
-            flex: 1;
             background: #000;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ONE-DEVICE SECURITY MODAL */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 8, 0.9);
+            backdrop-filter: blur(25px);
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            background: linear-gradient(180deg, #131926 0%, #0a0e17 100%);
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            border-radius: 24px;
+            padding: 34px 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 114, 255, 0.15);
+            text-align: center;
+            animation: zoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .lock-icon-wrap {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: rgba(0, 210, 255, 0.1);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #38bdf8;
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
+        }
+
+        .auth-card h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .auth-card p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 18px 15px 44px;
+            background: rgba(6, 9, 14, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .auth-btn:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 8px 24px rgba(0, 210, 255, 0.6);
+        }
+
+        .auth-msg {
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 14px;
+            min-height: 18px;
+            display: none;
+        }
+
+        .auth-msg.error {
+            color: var(--danger-color);
+            display: block;
+        }
+
+        .auth-msg.success {
+            color: var(--accent-green);
+            display: block;
+        }
+
+        .device-info-box {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 11px;
+            color: var(--text-muted);
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Gradient Element -->
+    <!-- Ambient Glow Element -->
     <div class="ambient-glow"></div>
+
+    <!-- ONE DEVICE AUTHENTICATION MODAL -->
+    <div class="auth-overlay" id="authModal">
+        <div class="auth-card">
+            <div class="lock-icon-wrap">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2>Device Access Verification</h2>
+            <p>This session requires an authorized one-time device access key. Each key can be activated on only <b>one device</b>.</p>
+            
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="text" id="accessKeyInput" placeholder="Enter Access Password / Key" autocomplete="off" spellcheck="false">
+            </div>
+
+            <button class="auth-btn" id="verifyBtn" onclick="verifyAccessKey()">
+                Unlock Device <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <div class="auth-msg" id="authMsg"></div>
+
+            <div class="device-info-box">
+                <i class="fa-solid fa-fingerprint"></i> Your Device ID: <span id="currentDevIdText">Generating...</span>
+            </div>
+        </div>
+    </div>
 
     <!-- TOP NAVIGATION -->
     <nav class="top-nav">
         <div class="brand">
             <img src="https://uploads.onecompiler.io/443fxwbzx/44kbmurbf/1Win_icon-removebg-preview.png" alt="1Win Icon">
             <span class="brand-text">1WIN</span>
-            <span class="brand-badge">PRO</span>
+            <span class="brand-badge">VIP</span>
         </div>
-        <div class="live-status">
-            <span class="status-dot"></span>
-            <span>SYSTEM ONLINE</span>
+        <div class="nav-right">
+            <div class="device-badge" title="Authenticated Device">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <span id="navDevId">DEV-XXXX</span>
+            </div>
+            <div class="live-status">
+                <span class="status-dot"></span>
+                <span>SECURE</span>
+            </div>
         </div>
     </nav>
 
     <!-- LOBBY SCREEN -->
-    <div id="lobby-container">
+    <div id="lobby-container" style="display: none;">
         <div class="hero-banner">
-            <span class="hero-badge"><i class="fa-solid fa-bolt-lightning"></i> Official Entertainment Hub</span>
-            <h1>Explore Premium Games</h1>
-            <p>Select your favorite gaming title to launch into ultra-fast, seamless real-time gameplay.</p>
+            <span class="hero-badge"><i class="fa-solid fa-bolt-lightning"></i> Authorized Entertainment Platform</span>
+            <h1>Explore Premium Titles</h1>
+            <p>Real-time high-speed gaming access powered by private encrypted cloud network.</p>
         </div>
 
         <div class="games-grid" id="gamesHub">
-            <div class="state-container">
-                <div class="loader-ring"></div>
-                <p style="color: var(--text-secondary); font-size: 14px; font-weight: 500;">Connecting to cloud servers...</p>
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px 0; color: var(--text-secondary);">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 30px; color: #00d2ff; margin-bottom: 12px;"></i>
+                <p>Loading available servers...</p>
             </div>
         </div>
     </div>
@@ -459,13 +595,13 @@
     <!-- FULLSCREEN GAME VIEW -->
     <div id="game-view">
         <button class="floating-back-btn" onclick="exitToLobby()">
-            <i class="fa-solid fa-arrow-left"></i> Exit to Lobby
+            <i class="fa-solid fa-arrow-left"></i> Back to Hub
         </button>
         <iframe id="game-frame" allowfullscreen="true" allow="autoplay; fullscreen; encrypted-media"></iframe>
     </div>
 
     <script>
-        // Firebase Setup
+        // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
           apiKey: "AIzaSyCV8gnfgtQjA-IBrfV4aJdz2agbhXnML2I",
           authDomain: "sunnyfuther.firebaseapp.com",
@@ -478,51 +614,163 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let loadedGames = {};
+        // 2. DEVICE FINGERPRINT / ID GENERATOR
+        function getOrCreateDeviceId() {
+            let devId = localStorage.getItem('1win_device_id');
+            if(!devId) {
+                // Generate permanent unique ID for this browser
+                devId = 'DEV-' + Math.random().toString(36).substring(2, 9).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem('1win_device_id', devId);
+            }
+            return devId;
+        }
 
-        // Realtime Games Listener
-        db.ref('custom_games').on('value', snapshot => {
-            const container = document.getElementById('gamesHub');
-            const data = snapshot.val();
-            container.innerHTML = '';
-            loadedGames = data || {};
+        const myDeviceId = getOrCreateDeviceId();
+        document.getElementById('currentDevIdText').innerText = myDeviceId;
+        document.getElementById('navDevId').innerText = myDeviceId.substring(0, 12) + '...';
 
-            if(!data) {
-                container.innerHTML = `
-                    <div class="state-container">
-                        <i class="fa-solid fa-gamepad" style="font-size: 32px; color: var(--text-muted); margin-bottom: 12px;"></i>
-                        <h4 style="font-size: 16px; margin-bottom: 6px; color: #fff;">No Games Available</h4>
-                        <p style="color: var(--text-secondary); font-size: 13px;">Please add games from the management dashboard.</p>
-                    </div>`;
+        // 3. CHECK SAVED AUTHENTICATION
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('1win_device_key');
+            if (savedKey) {
+                // Verify if still valid on database
+                db.ref('device_keys/' + savedKey).once('value').then(snapshot => {
+                    const data = snapshot.val();
+                    if(data && data.boundDeviceId === myDeviceId && data.status === 'active') {
+                        unlockApp();
+                    } else {
+                        // Key invalid or rebound
+                        localStorage.removeItem('1win_device_key');
+                        showAuthModal();
+                    }
+                }).catch(() => showAuthModal());
+            } else {
+                showAuthModal();
+            }
+        });
+
+        function showAuthModal() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('lobby-container').style.display = 'none';
+        }
+
+        function unlockApp() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('lobby-container').style.display = 'flex';
+            loadGames();
+        }
+
+        // 4. VERIFY & BIND ONE-DEVICE KEY
+        async function verifyAccessKey() {
+            const keyInput = document.getElementById('accessKeyInput');
+            const authMsg = document.getElementById('authMsg');
+            const verifyBtn = document.getElementById('verifyBtn');
+            const key = keyInput.value.trim();
+
+            if(!key) {
+                showMsg('Please enter a valid access key!', 'error');
                 return;
             }
 
-            Object.keys(data).forEach(key => {
-                const g = data[key];
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => launchGame(key);
+            verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+            verifyBtn.disabled = true;
 
-                card.innerHTML = `
-                    <div class="card-preview">
-                        <span class="card-tag">Online</span>
-                        <img src="${g.thumb}" onerror="this.src='https://uploads.onecompiler.io/443fxwbzx/44kbmurbf/1Win_icon-removebg-preview.png'" alt="${g.title}">
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <div class="game-name">${g.title}</div>
-                            <div class="game-desc">${g.desc || 'Premium online gaming experience'}</div>
+            try {
+                const snapshot = await db.ref('device_keys/' + key).once('value');
+                const keyData = snapshot.val();
+
+                if(!keyData) {
+                    showMsg('Invalid Key! Please check or contact admin.', 'error');
+                    resetBtn();
+                    return;
+                }
+
+                // Check if already bound to another device
+                if(keyData.boundDeviceId && keyData.boundDeviceId !== myDeviceId) {
+                    showMsg('ACCESS DENIED: This key is already locked to another device!', 'error');
+                    resetBtn();
+                    return;
+                }
+
+                // If not bound or matches this device -> Bind & Activate
+                await db.ref('device_keys/' + key).update({
+                    boundDeviceId: myDeviceId,
+                    status: 'active',
+                    lastLogin: Date.now(),
+                    deviceInfo: navigator.userAgent.substring(0, 100)
+                });
+
+                localStorage.setItem('1win_device_key', key);
+                showMsg('Device verified successfully!', 'success');
+
+                setTimeout(() => {
+                    unlockApp();
+                }, 700);
+
+            } catch(err) {
+                showMsg('Connection error. Please try again.', 'error');
+                resetBtn();
+            }
+        }
+
+        function showMsg(text, type) {
+            const authMsg = document.getElementById('authMsg');
+            authMsg.innerText = text;
+            authMsg.className = 'auth-msg ' + type;
+        }
+
+        function resetBtn() {
+            const verifyBtn = document.getElementById('verifyBtn');
+            verifyBtn.innerHTML = 'Unlock Device <i class="fa-solid fa-arrow-right"></i>';
+            verifyBtn.disabled = false;
+        }
+
+        // 5. GAME LOADING & LAUNCH LOGIC
+        let loadedGames = {};
+
+        function loadGames() {
+            db.ref('custom_games').on('value', snapshot => {
+                const container = document.getElementById('gamesHub');
+                const data = snapshot.val();
+                container.innerHTML = '';
+                loadedGames = data || {};
+
+                if(!data) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed var(--border-glass);">
+                            <i class="fa-solid fa-gamepad" style="font-size: 32px; color: var(--text-muted); margin-bottom: 12px;"></i>
+                            <h4 style="font-size: 16px; color: #fff; margin-bottom: 5px;">No Games Available</h4>
+                            <p style="color: var(--text-secondary); font-size: 13px;">Wait for the administrator to upload games.</p>
+                        </div>`;
+                    return;
+                }
+
+                Object.keys(data).forEach(key => {
+                    const g = data[key];
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
+                    card.onclick = () => launchGame(key);
+
+                    card.innerHTML = `
+                        <div class="card-preview">
+                            <span class="card-tag">VIP Cloud</span>
+                            <img src="${g.thumb}" onerror="this.src='https://uploads.onecompiler.io/443fxwbzx/44kbmurbf/1Win_icon-removebg-preview.png'" alt="${g.title}">
                         </div>
-                        <button class="play-btn">
-                            Launch Game <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
+                        <div class="card-body">
+                            <div>
+                                <div class="game-name">${g.title}</div>
+                                <div class="game-desc">${g.desc || 'Optimized mobile & desktop performance'}</div>
+                            </div>
+                            <button class="play-btn">
+                                Launch Now <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
             });
-        });
+        }
 
-        // Launch Game Logic (Supports HTML Code & Direct Web Links)
         function launchGame(key) {
             const game = loadedGames[key];
             if(!game) return;
@@ -543,7 +791,6 @@
             gameView.style.display = 'flex';
         }
 
-        // Return to Lobby
         function exitToLobby() {
             const frame = document.getElementById('game-frame');
             const lobby = document.getElementById('lobby-container');
