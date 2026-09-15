@@ -59,7 +59,7 @@
       transform: rotate(90deg) scale(1.1);
     }
 
-    /* সেটিংস মোডাল (স্ক্রলযোগ্য ও রিচ ডিজাইন) */
+    /* সেটিংস মোডাল */
     .settings-modal {
       display: none;
       position: fixed;
@@ -166,7 +166,7 @@
       width: 100%;
     }
 
-    /* টপ ব্যানার (লকড) */
+    /* টপ ব্যানার */
     .top-banner {
       position: fixed;
       top: 18px;
@@ -187,7 +187,7 @@
       white-space: nowrap;
     }
 
-    /* লোগো (লকড) */
+    /* লোগো */
     .logo {
       display: block;
       margin: 75px auto 14px; 
@@ -200,7 +200,7 @@
       pointer-events: none;
     }
 
-    /* ইউআইডি কন্টেইনার (কেবল এটাই ডাবল ক্লিকে এডিটেবল) */
+    /* ইউআইডি কন্টেইনার */
     .uid-container {
       margin-bottom: 20px;
       text-align: center;
@@ -229,40 +229,83 @@
       letter-spacing: 1px;
     }
 
-    /* সিগন্যাল সার্কেল */
+    /* সিগন্যাল সার্কেল (৭ রঙের ঘূর্ণায়মান বর্ডার) */
     .signal-circle-container {
       display: flex;
       justify-content: center;
       margin: 20px 0;
     }
-    .signal-circle {
-      width: 185px;
-      height: 185px;
-      border: 4px solid var(--accent-color);
+    .signal-circle-wrapper {
+      position: relative;
+      width: 195px;
+      height: 195px;
       border-radius: 50%;
-      background: black;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+    /* ৭ রঙের অ্যানিমেশন রিং */
+    .signal-circle-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 270px;
+      height: 270px;
+      background: conic-gradient(
+        #ff0055, 
+        #ff8800, 
+        #ffee00, 
+        #00ff66, 
+        #00f0ff, 
+        #8800ff, 
+        #ff00c8, 
+        #ff0055
+      );
+      animation: rotateRainbow 2.5s linear infinite;
+    }
+
+    @keyframes rotateRainbow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .signal-circle {
+      position: relative;
+      width: 183px;
+      height: 183px;
+      border-radius: 50%;
+      background: #000000; /* ভিতরের অংশ কালো */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
       font-weight: 900;
       color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.35);
+      z-index: 2;
+      transition: transform 0.3s ease;
     }
     .signal-circle:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 25px var(--accent-color);
+      transform: scale(1.03);
     }
 
-    /* বাটন */
+    .waiting {
+      text-align: center;
+      margin-top: 15px;
+      color: var(--primary-color);
+      min-height: 20px;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    /* বাটন - একটু নিচে নামানো হয়েছে (margin-top: 38px) */
     .btn {
       display: block;
       width: 320px;
       max-width: 90%;
-      margin: 15px auto;
-      padding: 12px;
+      margin: 38px auto 15px;
+      padding: 13px;
       background: linear-gradient(93.73deg, var(--primary-color), var(--secondary-color));
       color: white;
       font-size: 20px;
@@ -273,7 +316,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       outline: none;
-      box-shadow: 0 0 10px var(--primary-color);
+      box-shadow: 0 0 15px var(--primary-color);
     }
     .btn:hover:not(:disabled) { filter: saturate(1.4); }
     .btn:active:not(:disabled) { transform: scale(0.96); }
@@ -284,7 +327,7 @@
       width: 320px;
       max-width: calc(100% - 30px);
       height: 18px;
-      margin: 10px auto;
+      margin: 15px auto;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
@@ -309,14 +352,6 @@
       font-size: 10px;
       color: white;
       font-weight: bold;
-    }
-
-    .waiting {
-      text-align: center;
-      margin-top: 8px;
-      color: var(--primary-color);
-      min-height: 20px;
-      font-size: 12px;
     }
   </style>
 </head>
@@ -360,24 +395,28 @@
     <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
   </div>
 
-  <!-- টপ ব্যানার (লকড) -->
+  <!-- টপ ব্যানার -->
   <div class="top-banner">BLACKDOG AVIATOR</div>
 
-  <!-- লোগো (লকড) -->
+  <!-- লোগো -->
   <img class="logo" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" />
 
-  <!-- কেবল এটাই ডাবল ক্লিকে পরিবর্তনযোগ্য -->
+  <!-- ইউআইডি কন্টেইনার -->
   <div class="uid-container">
     <div class="uid-text" id="uidDisplay" title="Double click to set UID">SET UID</div>
     <span class="uid-hint">Double click to set 9-digit UID</span>
   </div>
 
+  <!-- সিগন্যাল সার্কেল (রঙিন ঘুরন্ত বর্ডার সহ) -->
   <div class="signal-circle-container">
-    <div class="signal-circle" id="signalDisplay">SIGNAL</div>
+    <div class="signal-circle-wrapper">
+      <div class="signal-circle" id="signalDisplay">SIGNAL</div>
+    </div>
   </div>
 
   <div class="waiting" id="waitingText"></div>
 
+  <!-- স্টার্ট সিগন্যাল বাটন -->
   <button class="btn" id="signalBtn">Start Signal</button>
 
   <div class="progress-container" id="progressContainer" style="display:none;">
@@ -386,7 +425,7 @@
   </div>
 
   <script>
-    // ====== UID SYSTEM (ONLY THIS IS EDITABLE) ======
+    // ====== UID SYSTEM ======
     const uidDisplay = document.getElementById('uidDisplay');
     const savedUID = localStorage.getItem('saved_user_uid');
     if (savedUID) {
@@ -432,7 +471,7 @@
       setTheme(localStorage.getItem('theme_p'), localStorage.getItem('theme_s'), localStorage.getItem('theme_a'));
     }
 
-    // ====== DYNAMIC ANIMATION ENGINE (6 THEMES) ======
+    // ====== DYNAMIC ANIMATION ENGINE ======
     let currentAnimation = localStorage.getItem('anim_theme') || 'network';
     let maxInterval = parseInt(localStorage.getItem('signal_timer') || '60');
 
@@ -464,7 +503,6 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // অ্যানিমেশন অবজেক্টস
     let particles = [];
     let matrixColumns = [];
     const matrixChars = "0123456789ABCDEF$#@%*+-";
@@ -533,7 +571,6 @@
     }
 
     function renderEngine() {
-      // ১. নেটওয়ার্ক
       if (currentAnimation === 'network') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -562,9 +599,7 @@
             }
           }
         }
-      } 
-      // ২. ম্যাট্রিক্স
-      else if (currentAnimation === 'matrix') {
+      } else if (currentAnimation === 'matrix') {
         ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = currentPrimaryColor;
@@ -576,9 +611,7 @@
           if (matrixColumns[i] > canvas.height && Math.random() > 0.975) matrixColumns[i] = 0;
           matrixColumns[i] += 16;
         }
-      } 
-      // ৩. স্টারস
-      else if (currentAnimation === 'stars') {
+      } else if (currentAnimation === 'stars') {
         ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         const cx = canvas.width / 2;
@@ -603,9 +636,7 @@
             ctx.fill();
           }
         }
-      } 
-      // ৪. হেক্সাগন
-      else if (currentAnimation === 'hex') {
+      } else if (currentAnimation === 'hex') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -621,9 +652,7 @@
           drawHexagon(hex.x, hex.y, hex.size);
           ctx.globalAlpha = 1.0;
         }
-      }
-      // ৫. থ্রিডি কিউবস
-      else if (currentAnimation === 'cubes') {
+      } else if (currentAnimation === 'cubes') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -642,9 +671,7 @@
           ctx.strokeRect(-c.size / 2, -c.size / 2, c.size, c.size);
           ctx.restore();
         }
-      }
-      // ৬. ওয়েভ গ্রিড
-      else if (currentAnimation === 'wave') {
+      } else if (currentAnimation === 'wave') {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         waveOffset += 0.03;
@@ -681,7 +708,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ====== SIGNAL LOGIC ======
+    // ====== ডাইনামিক রেন্ডম সিগন্যাল লজিক (বিভিন্ন রেঞ্জ) ======
     const signalDisplay = document.getElementById('signalDisplay');
     const signalBtn = document.getElementById('signalBtn');
     const waitingText = document.getElementById('waitingText');
@@ -692,6 +719,7 @@
     let loopStarted = false;
     let timeRemains = maxInterval;
     let timer = null;
+    let lastRangeIndex = -1;
 
     const waitingMessages = [
       "Connecting to Game Hash...",
@@ -701,13 +729,30 @@
       "Signal Ready..."
     ];
 
+    // একই রেঞ্জে আটকে না থেকে বৈচিত্র্যময় সিগন্যাল জেনারেট করার ফাংশন
     function getRandomSignal() {
-      const rand = Math.random();
-      if (rand < 0.8) {
-        return parseFloat((Math.random() * (3.70 - 2.10) + 2.10).toFixed(2));
+      // ৪টি ভিন্ন লেভেলের রেঞ্জ: 
+      // 0: Low (1.18x - 1.95x)
+      // 1: Medium (2.10x - 4.80x)
+      // 2: High (5.20x - 12.50x)
+      // 3: Mega (14.00x - 38.00x)
+      const ranges = [0, 1, 2, 3];
+      // আগের রেঞ্জটি বাদ দেওয়া যাতে প্রতি ক্লিকে ভিন্ন ধাঁচের পয়েন্ট আসে
+      const availableRanges = ranges.filter(idx => idx !== lastRangeIndex);
+      const chosenRange = availableRanges[Math.floor(Math.random() * availableRanges.length)];
+      lastRangeIndex = chosenRange;
+
+      let val = 1.00;
+      if (chosenRange === 0) {
+        val = Math.random() * (1.95 - 1.18) + 1.18;
+      } else if (chosenRange === 1) {
+        val = Math.random() * (4.80 - 2.10) + 2.10;
+      } else if (chosenRange === 2) {
+        val = Math.random() * (12.50 - 5.20) + 5.20;
       } else {
-        return parseFloat((Math.random() * (7.00 - 1.10) + 1.10).toFixed(2));
+        val = Math.random() * (38.00 - 14.00) + 14.00;
       }
+      return parseFloat(val.toFixed(2));
     }
 
     async function generateSignal() {
@@ -724,7 +769,7 @@
       const signal = getRandomSignal();
       const finalVal = signal.toFixed(2);
       
-      // Firebase-এ ক্র্যাশ পয়েন্ট আপডেট
+      // Firebase-এ ক্র্যাশ পয়েন্ট পাঠানো
       db.ref('crashPoint').set(parseFloat(finalVal))
         .then(() => {
            waitingText.textContent = "SIGNAL ACTIVE IN GAME ✅";
