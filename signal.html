@@ -202,7 +202,7 @@
 
     /* ইউআইডি কন্টেইনার */
     .uid-container {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       text-align: center;
     }
     .uid-text {
@@ -229,67 +229,134 @@
       letter-spacing: 1px;
     }
 
-    /* সিগন্যাল সার্কেল (৭ রঙের ঘূর্ণায়মান বর্ডার) */
+    /* ================= 7 টি আলাদা স্টাইলিশ ঘুরন্ত রিং ================= */
     .signal-circle-container {
       display: flex;
       justify-content: center;
-      margin: 20px 0;
-    }
-    .signal-circle-wrapper {
+      align-items: center;
+      margin: 15px 0;
       position: relative;
-      width: 195px;
-      height: 195px;
-      border-radius: 50%;
+    }
+    .orbit-stage {
+      position: relative;
+      width: 252px;
+      height: 252px;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
     }
-    /* ৭ রঙের অ্যানিমেশন রিং */
-    .signal-circle-wrapper::before {
-      content: '';
+
+    /* সাধারণ রিং প্রপার্টি */
+    .orbit-ring {
       position: absolute;
-      width: 270px;
-      height: 270px;
-      background: conic-gradient(
-        #ff0055, 
-        #ff8800, 
-        #ffee00, 
-        #00ff66, 
-        #00f0ff, 
-        #8800ff, 
-        #ff00c8, 
-        #ff0055
-      );
-      animation: rotateRainbow 2.5s linear infinite;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      pointer-events: none;
+      transform-origin: center center;
     }
 
-    @keyframes rotateRainbow {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    /* ১. লাল রিং (ড্যাশড স্টাইল - ক্লকওয়াইজ ঘূর্ণন) */
+    .ring-red {
+      width: 178px;
+      height: 178px;
+      border: 2px dashed #ff0055;
+      box-shadow: 0 0 8px rgba(255, 0, 85, 0.6);
+      animation: spinRight 3.5s linear infinite;
     }
 
+    /* ২. কমলা রিং (ডটেড স্টাইল - অ্যান্টি-ক্লকওয়াইজ ঘূর্ণন) */
+    .ring-orange {
+      width: 188px;
+      height: 188px;
+      border: 2.5px dotted #ff7700;
+      box-shadow: 0 0 8px rgba(255, 119, 0, 0.6);
+      animation: spinLeft 5s linear infinite;
+    }
+
+    /* ৩. হলুদ রিং (আর্ক ও ডাবল গ্যাপ স্টাইল) */
+    .ring-yellow {
+      width: 198px;
+      height: 198px;
+      border: 2px solid transparent;
+      border-top: 2.5px solid #ffee00;
+      border-bottom: 2.5px solid #ffee00;
+      border-left: 2px dashed #ffee00;
+      box-shadow: 0 0 9px rgba(255, 238, 0, 0.6);
+      animation: spinRight 7s linear infinite;
+    }
+
+    /* ৪. নিওন গ্রিন রিং (লং ড্যাশড স্টাইল) */
+    .ring-green {
+      width: 208px;
+      height: 208px;
+      border: 2px dashed #00ff66;
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+      animation: spinLeft 4.5s linear infinite;
+    }
+
+    /* ৫. সায়ান ব্লু রিং (সাইড ব্র্যাকেট আর্ক স্টাইল) */
+    .ring-cyan {
+      width: 218px;
+      height: 218px;
+      border: 2.5px solid transparent;
+      border-left: 3px solid #00f0ff;
+      border-right: 3px solid #00f0ff;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+      animation: spinRight 6s linear infinite;
+    }
+
+    /* ৬. পার্পল রিং (ফাইন ডট স্টাইল) */
+    .ring-purple {
+      width: 228px;
+      height: 228px;
+      border: 2px dotted #aa00ff;
+      box-shadow: 0 0 10px rgba(170, 0, 255, 0.6);
+      animation: spinLeft 8s linear infinite;
+    }
+
+    /* ৭. পিঙ্ক / ম্যাজেন্টা রিং (আউটার ড্যাশড স্টাইল) */
+    .ring-pink {
+      width: 240px;
+      height: 240px;
+      border: 2px dashed #ff00bb;
+      box-shadow: 0 0 12px rgba(255, 0, 187, 0.7);
+      animation: spinRight 9s linear infinite;
+    }
+
+    /* ঘূর্ণন অ্যানিমেশন */
+    @keyframes spinRight {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes spinLeft {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    /* মাঝের কালো সিগন্যাল বৃত্ত */
     .signal-circle {
       position: relative;
-      width: 183px;
-      height: 183px;
+      width: 166px;
+      height: 166px;
       border-radius: 50%;
-      background: #000000; /* ভিতরের অংশ কালো */
+      background: #000000; /* ভিতরের অংশ পুরো কালো */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 900;
-      color: white;
+      color: #ffffff;
       cursor: pointer;
-      z-index: 2;
-      transition: transform 0.3s ease;
+      z-index: 10;
+      transition: transform 0.2s ease;
+      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
     }
     .signal-circle:hover {
-      transform: scale(1.03);
+      transform: scale(1.04);
     }
 
+    /* ওয়েটিং টেক্সট */
     .waiting {
       text-align: center;
       margin-top: 15px;
@@ -299,12 +366,12 @@
       letter-spacing: 1px;
     }
 
-    /* বাটন - একটু নিচে নামানো হয়েছে (margin-top: 38px) */
+    /* স্টার্ট সিগন্যাল বাটন (নিচে পজিশন করা) */
     .btn {
       display: block;
       width: 320px;
       max-width: 90%;
-      margin: 38px auto 15px;
+      margin: 35px auto 15px; /* পর্যাপ্ত নিচে নামানো */
       padding: 13px;
       background: linear-gradient(93.73deg, var(--primary-color), var(--secondary-color));
       color: white;
@@ -327,7 +394,7 @@
       width: 320px;
       max-width: calc(100% - 30px);
       height: 18px;
-      margin: 15px auto;
+      margin: 12px auto;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
@@ -407,9 +474,25 @@
     <span class="uid-hint">Double click to set 9-digit UID</span>
   </div>
 
-  <!-- সিগন্যাল সার্কেল (রঙিন ঘুরন্ত বর্ডার সহ) -->
+  <!-- সিগন্যাল সার্কেল (একসাথে ৭টি আলাদা স্টাইলের ঘূর্ণায়মান রঙিন লাইন) -->
   <div class="signal-circle-container">
-    <div class="signal-circle-wrapper">
+    <div class="orbit-stage">
+      <!-- ১. লাল (ড্যাশড) -->
+      <div class="orbit-ring ring-red"></div>
+      <!-- ২. কমলা (ডটেড) -->
+      <div class="orbit-ring ring-orange"></div>
+      <!-- ৩. হলুদ (ডুয়েল আর্চ) -->
+      <div class="orbit-ring ring-yellow"></div>
+      <!-- ৪. নিওন গ্রিন (লং ড্যাশড) -->
+      <div class="orbit-ring ring-green"></div>
+      <!-- ৫. সায়ান ব্লু (ব্র্যাকেট) -->
+      <div class="orbit-ring ring-cyan"></div>
+      <!-- ৬. পার্পল (ফাইন ডট) -->
+      <div class="orbit-ring ring-purple"></div>
+      <!-- ৭. পিঙ্ক/ম্যাজেন্টা (আউটার ড্যাশ) -->
+      <div class="orbit-ring ring-pink"></div>
+
+      <!-- মাঝের কালো সিগন্যাল ডিসপ্লে -->
       <div class="signal-circle" id="signalDisplay">SIGNAL</div>
     </div>
   </div>
@@ -708,7 +791,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ====== ডাইনামিক রেন্ডম সিগন্যাল লজিক (বিভিন্ন রেঞ্জ) ======
+    // ====== ডাইনামিক বৈচিত্র্যময় র্যান্ডম সিগন্যাল লজিক ======
     const signalDisplay = document.getElementById('signalDisplay');
     const signalBtn = document.getElementById('signalBtn');
     const waitingText = document.getElementById('waitingText');
@@ -729,15 +812,13 @@
       "Signal Ready..."
     ];
 
-    // একই রেঞ্জে আটকে না থেকে বৈচিত্র্যময় সিগন্যাল জেনারেট করার ফাংশন
+    // প্রতি ক্লিকে ভিন্ন ধাঁচের পয়েন্ট আসার জন্য ৪টি রেঞ্জের রোটেশন
     function getRandomSignal() {
-      // ৪টি ভিন্ন লেভেলের রেঞ্জ: 
       // 0: Low (1.18x - 1.95x)
       // 1: Medium (2.10x - 4.80x)
       // 2: High (5.20x - 12.50x)
       // 3: Mega (14.00x - 38.00x)
       const ranges = [0, 1, 2, 3];
-      // আগের রেঞ্জটি বাদ দেওয়া যাতে প্রতি ক্লিকে ভিন্ন ধাঁচের পয়েন্ট আসে
       const availableRanges = ranges.filter(idx => idx !== lastRangeIndex);
       const chosenRange = availableRanges[Math.floor(Math.random() * availableRanges.length)];
       lastRangeIndex = chosenRange;
@@ -769,7 +850,7 @@
       const signal = getRandomSignal();
       const finalVal = signal.toFixed(2);
       
-      // Firebase-এ ক্র্যাশ পয়েন্ট পাঠানো
+      // Firebase-এ ক্র্যাশ পয়েন্ট আপডেট
       db.ref('crashPoint').set(parseFloat(finalVal))
         .then(() => {
            waitingText.textContent = "SIGNAL ACTIVE IN GAME ✅";
