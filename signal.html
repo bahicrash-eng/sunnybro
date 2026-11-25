@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BLACKDOG AVIATOR - Official Signal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- FIREBASE SDK -->
@@ -16,24 +16,19 @@
       --primary-color: #00f0ff;
       --secondary-color: #0855c4;
       --accent-color: #ff0000;
-      --glass-bg: rgba(13, 17, 28, 0.72);
     }
 
-    * {
+- {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     body {
       min-height: 100vh;
-      overflow-x: hidden;
-      background: #030508;
+      overflow: hidden;
+      background: black;
       color: white;
       font-family: 'Orbitron', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
     #bgCanvas {
       position: fixed;
@@ -44,151 +39,24 @@
       z-index: -1;
     }
 
-    /* ================= STEP 1: PLATFORM SELECTION SCREEN ================= */
-    .platform-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 1500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(2, 4, 10, 0.75);
-      backdrop-filter: blur(8px);
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-    .platform-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .platform-card {
-      width: 100%;
-      max-width: 380px;
-      background: var(--glass-bg);
-      border: 1.5px solid var(--primary-color);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.08);
-      border-radius: 22px;
-      padding: 28px 22px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .platform-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .platform-logo {
-      width: 82px;
-      height: 82px;
-      border-radius: 50%;
-      border: 2px solid var(--primary-color);
-      box-shadow: 0 0 18px var(--primary-color);
-      margin-bottom: 12px;
-      object-fit: cover;
-    }
-    .platform-title {
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: var(--primary-color);
-      text-shadow: 0 0 10px var(--primary-color);
-      margin-bottom: 6px;
-    }
-    .platform-subtitle {
-      font-size: 10px;
-      color: #a0aec0;
-      letter-spacing: 1.2px;
-      margin-bottom: 22px;
-    }
-    .platform-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .platform-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(0, 240, 255, 0.35);
-      border-radius: 14px;
-      padding: 15px 10px;
-      color: #fff;
-      font-family: 'Orbitron', monospace;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      position: relative;
-    }
-    .platform-item:last-child {
-      grid-column: span 2;
-    }
-    .platform-item i {
-      font-size: 18px;
-      color: var(--primary-color);
-    }
-    .platform-item:hover {
-      background: rgba(0, 240, 255, 0.15);
-      border-color: var(--primary-color);
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
-      transform: translateY(-2px);
-    }
-    .platform-item:active {
-      transform: scale(0.96);
-    }
-
-    /* ================= MAIN APP WRAPPER ================= */
-    #mainApp {
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 75px 16px 25px;
-      opacity: 0;
-      transform: scale(0.97);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    #mainApp.visible {
-      opacity: 1;
-      transform: scale(1);
-    }
-
     /* সেটিংস বাটন */
     .settings-btn {
       position: fixed;
-      top: 16px;
-      right: 16px;
-      font-size: 18px;
+      top: 18px;
+      right: 18px;
+      font-size: 20px;
       color: var(--primary-color);
       cursor: pointer;
       z-index: 1001;
-      background: var(--glass-bg);
-      backdrop-filter: blur(8px);
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
+      background: rgba(0,0,0,0.65);
+      padding: 10px;
+      border-radius: 50%;
       border: 1px solid var(--primary-color);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
-      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 10px var(--primary-color);
+      transition: transform 0.3s;
     }
     .settings-btn:hover {
-      transform: rotate(90deg) scale(1.08);
-      box-shadow: 0 0 18px var(--primary-color);
+      transform: rotate(90deg) scale(1.1);
     }
 
     /* সেটিংস মোডাল */
@@ -198,12 +66,11 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(11, 14, 23, 0.95);
-      backdrop-filter: blur(12px);
-      border: 1.5px solid var(--primary-color);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
-      padding: 22px;
-      border-radius: 18px;
+      background: #0d0f15;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 30px var(--primary-color);
+      padding: 20px;
+      border-radius: 15px;
       z-index: 2000;
       width: 90%;
       max-width: 340px;
@@ -217,8 +84,8 @@
     .settings-modal h3 {
       color: var(--primary-color);
       margin: 12px 0 8px;
-      font-size: 12px;
-      letter-spacing: 1.2px;
+      font-size: 13px;
+      letter-spacing: 1px;
     }
     
     /* কালার গ্রিড */
@@ -230,8 +97,8 @@
     }
     .theme-btn {
       height: 30px;
-      border-radius: 8px;
-      border: 2px solid rgba(255,255,255,0.8);
+      border-radius: 6px;
+      border: 2px solid #fff;
       cursor: pointer;
       outline: none;
       transition: transform 0.2s;
@@ -246,11 +113,11 @@
       margin-bottom: 12px;
     }
     .anim-btn {
-      background: #161a24;
+      background: #181b22;
       color: #fff;
-      border: 1px solid rgba(0, 240, 255, 0.5);
-      padding: 8px 4px;
-      border-radius: 8px;
+      border: 1px solid var(--primary-color);
+      padding: 7px 4px;
+      border-radius: 6px;
       font-family: 'Orbitron', monospace;
       font-size: 9px;
       font-weight: bold;
@@ -272,11 +139,11 @@
     }
     .timer-btn {
       flex: 1;
-      background: #161a24;
+      background: #181b22;
       color: #fff;
-      border: 1px solid #333;
-      padding: 7px;
-      border-radius: 8px;
+      border: 1px solid #444;
+      padding: 6px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: bold;
       font-family: 'Orbitron', monospace;
@@ -285,125 +152,73 @@
     .timer-btn.active {
       border-color: var(--primary-color);
       color: var(--primary-color);
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
     }
 
     .close-modal {
-      background: linear-gradient(90deg, #ff0055, #cc0044);
+      background: #ff0055;
       color: white;
       border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
+      padding: 8px 24px;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
       font-family: 'Orbitron', monospace;
       width: 100%;
-      letter-spacing: 1px;
     }
 
     /* টপ ব্যানার */
     .top-banner {
       position: fixed;
-      top: 16px;
+      top: 18px;
       left: 50%;
       transform: translateX(-50%);
       font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 14px;
+      font-weight: 800;
+      font-size: 16px;
       letter-spacing: 2px;
       color: var(--primary-color);
-      background: var(--glass-bg);
-      backdrop-filter: blur(8px);
-      padding: 10px 18px;
+      background: rgba(0,0,0,0.65);
+      padding: 9px 18px;
       border-radius: 12px;
-      border: 1px solid rgba(0, 240, 255, 0.45);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 10px var(--primary-color);
       text-shadow: 0 0 8px var(--primary-color);
       user-select: none;
       z-index: 1000;
       white-space: nowrap;
     }
 
-    /* মেইন সাইবার প্যানেল */
-    .cyber-panel {
-      width: 100%;
-      max-width: 390px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 240, 255, 0.35);
-      border-radius: 26px;
-      padding: 22px 18px 26px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(0, 240, 255, 0.06);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* সিলেক্টেড প্ল্যাটফর্ম ব্যাজ */
-    .selected-platform-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 240, 255, 0.1);
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 5px 14px;
-      border-radius: 20px;
-      letter-spacing: 1.5px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .selected-platform-badge:hover {
-      background: rgba(0, 240, 255, 0.22);
-    }
-    .selected-platform-badge span.dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #00ff66;
-      box-shadow: 0 0 8px #00ff66;
-    }
-
     /* লোগো */
     .logo {
       display: block;
-      margin: 2px auto 12px; 
-      width: 82px;
-      height: 82px;
+      margin: 75px auto 14px; 
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--primary-color);
-      box-shadow: 0 0 18px var(--primary-color);
+      filter: drop-shadow(0 0 12px var(--primary-color));
       user-select: none;
       pointer-events: none;
     }
 
     /* ইউআইডি কন্টেইনার */
     .uid-container {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       text-align: center;
-      width: 100%;
     }
     .uid-text {
       display: inline-block;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 17px;
       letter-spacing: 2px;
       color: var(--primary-color);
-      text-shadow: 0 0 12px var(--primary-color);
+      text-shadow: 0 0 15px var(--primary-color);
       user-select: none;
       cursor: pointer;
       border: 1px dashed var(--primary-color);
-      padding: 7px 20px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.55);
-      transition: transform 0.2s, background 0.2s;
-    }
-    .uid-text:hover {
-      background: rgba(0, 240, 255, 0.12);
+      padding: 5px 16px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s;
     }
     .uid-text:active { transform: scale(0.96); }
     .uid-hint {
@@ -419,18 +234,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 10px 0;
+      margin: 15px 0;
       position: relative;
     }
     .orbit-stage {
       position: relative;
-      width: 248px;
-      height: 248px;
+      width: 252px;
+      height: 252px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    /* সাধারণ রিং প্রপার্টি */
     .orbit-ring {
       position: absolute;
       top: 50%;
@@ -440,6 +256,7 @@
       transform-origin: center center;
     }
 
+    /* ১. লাল রিং (ড্যাশড স্টাইল - ক্লকওয়াইজ ঘূর্ণন) */
     .ring-red {
       width: 178px;
       height: 178px;
@@ -447,6 +264,8 @@
       box-shadow: 0 0 8px rgba(255, 0, 85, 0.6);
       animation: spinRight 3.5s linear infinite;
     }
+
+    /* ২. কমলা রিং (ডটেড স্টাইল - অ্যান্টি-ক্লকওয়াইজ ঘূর্ণন) */
     .ring-orange {
       width: 188px;
       height: 188px;
@@ -454,6 +273,8 @@
       box-shadow: 0 0 8px rgba(255, 119, 0, 0.6);
       animation: spinLeft 5s linear infinite;
     }
+
+    /* ৩. হলুদ রিং (আর্ক ও ডাবল গ্যাপ স্টাইল) */
     .ring-yellow {
       width: 198px;
       height: 198px;
@@ -464,6 +285,8 @@
       box-shadow: 0 0 9px rgba(255, 238, 0, 0.6);
       animation: spinRight 7s linear infinite;
     }
+
+    /* ৪. নিওন গ্রিন রিং (লং ড্যাশড স্টাইল) */
     .ring-green {
       width: 208px;
       height: 208px;
@@ -471,6 +294,8 @@
       box-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
       animation: spinLeft 4.5s linear infinite;
     }
+
+    /* ৫. সায়ান ব্লু রিং (সাইড ব্র্যাকেট আর্ক স্টাইল) */
     .ring-cyan {
       width: 218px;
       height: 218px;
@@ -480,6 +305,8 @@
       box-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
       animation: spinRight 6s linear infinite;
     }
+
+    /* ৬. পার্পল রিং (ফাইন ডট স্টাইল) */
     .ring-purple {
       width: 228px;
       height: 228px;
@@ -487,6 +314,8 @@
       box-shadow: 0 0 10px rgba(170, 0, 255, 0.6);
       animation: spinLeft 8s linear infinite;
     }
+
+    /* ৭. পিঙ্ক / ম্যাজেন্টা রিং (আউটার ড্যাশড স্টাইল) */
     .ring-pink {
       width: 240px;
       height: 240px;
@@ -495,6 +324,7 @@
       animation: spinRight 9s linear infinite;
     }
 
+    /* ঘূর্ণন অ্যানিমেশন */
     @keyframes spinRight {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -507,22 +337,20 @@
     /* মাঝের কালো সিগন্যাল বৃত্ত */
     .signal-circle {
       position: relative;
-      width: 164px;
-      height: 164px;
+      width: 166px;
+      height: 166px;
       border-radius: 50%;
-      background: radial-gradient(circle at center, #0e131f 0%, #000000 85%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #000000; /* ভিতরের অংশ পুরো কালো */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 900;
       color: #ffffff;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
       cursor: pointer;
       z-index: 10;
       transition: transform 0.2s ease;
-      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.15);
+      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
     }
     .signal-circle:hover {
       transform: scale(1.04);
@@ -531,47 +359,43 @@
     /* ওয়েটিং টেক্সট */
     .waiting {
       text-align: center;
-      margin-top: 8px;
+      margin-top: 15px;
       color: var(--primary-color);
       min-height: 20px;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13px;
       letter-spacing: 1px;
     }
 
-    /* স্টার্ট সিগন্যাল বাটন */
+    /* স্টার্ট সিগন্যাল বাটন (নিচে পজিশন করা) */
     .btn {
       display: block;
-      width: 100%;
-      margin: 18px auto 8px;
-      padding: 14px;
+      width: 320px;
+      max-width: 90%;
+      margin: 35px auto 15px; /* পর্যাপ্ত নিচে নামানো */
+      padding: 13px;
       background: linear-gradient(93.73deg, var(--primary-color), var(--secondary-color));
       color: white;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
+      font-size: 20px;
+      font-weight: bold;
       font-family: 'Orbitron', monospace;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
       outline: none;
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
-      text-transform: uppercase;
+      box-shadow: 0 0 15px var(--primary-color);
     }
-    .btn:hover:not(:disabled) {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
-    }
-    .btn:active:not(:disabled) { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn:hover:not(:disabled) { filter: saturate(1.4); }
+    .btn:active:not(:disabled) { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* প্রগ্রেস বার */
     .progress-container {
-      width: 100%;
-      height: 20px;
-      margin: 10px auto 0;
-      background: rgba(0, 0, 0, 0.6);
+      width: 320px;
+      max-width: calc(100% - 30px);
+      height: 18px;
+      margin: 12px auto;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
       position: relative;
@@ -579,7 +403,7 @@
     }
     .progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+      background: var(--primary-color);
       width: 0%;
       transition: width 1s linear;
     }
@@ -595,152 +419,95 @@
       font-size: 10px;
       color: white;
       font-weight: bold;
-      letter-spacing: 0.8px;
-      text-shadow: 0 1px 2px #000;
     }
   </style>
 </head>
 <body>
   <canvas id="bgCanvas"></canvas>
 
-  <!-- STEP 1: PLATFORM SELECTOR OVERLAY -->
-  <div class="platform-screen" id="platformScreen">
-    <div class="platform-card">
-      <img class="platform-logo" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" />
-      <div class="platform-title">SELECT PLATFORM</div>
-      <div class="platform-subtitle">CHOOSE YOUR SERVER TO CONNECT</div>
-      
-      <div class="platform-grid">
-        <button class="platform-item" onclick="selectPlatform('1XBET')">
-          <i class="fas fa-bolt"></i>
-          <span>1XBET</span>
-        </button>
-        <button class="platform-item" onclick="selectPlatform('MELBET')">
-          <i class="fas fa-fire"></i>
-          <span>MELBET</span>
-        </button>
-        <button class="platform-item" onclick="selectPlatform('LINEBET')">
-          <i class="fas fa-satellite-dish"></i>
-          <span>LINEBET</span>
-        </button>
-        <button class="platform-item" onclick="selectPlatform('MEGAPARI')">
-          <i class="fas fa-crown"></i>
-          <span>MEGAPARI</span>
-        </button>
-        <button class="platform-item" onclick="selectPlatform('1WIN')">
-          <i class="fas fa-plane-departure"></i>
-          <span>1WIN</span>
-        </button>
-      </div>
+  <!-- সেটিংস আইকন -->
+  <div class="settings-btn" onclick="toggleSettings()"><i class="fas fa-gear"></i></div>
+
+  <!-- সেটিংস মোডাল -->
+  <div class="settings-modal" id="settingsModal">
+    <h3>COLOR PALETTES (8)</h3>
+    <div class="theme-options">
+      <button class="theme-btn" title="Cyan" style="background:#00f0ff" onclick="setTheme('#00f0ff', '#0855c4', '#ff0000')"></button>
+      <button class="theme-btn" title="Crimson" style="background:#ff0055" onclick="setTheme('#ff0055', '#990033', '#00f0ff')"></button>
+      <button class="theme-btn" title="Neon Green" style="background:#00ff66" onclick="setTheme('#00ff66', '#008833', '#ff0055')"></button>
+      <button class="theme-btn" title="Gold Amber" style="background:#ffbb00" onclick="setTheme('#ffbb00', '#bb8800', '#ff0000')"></button>
+      <button class="theme-btn" title="Deep Purple" style="background:#9900ff" onclick="setTheme('#9900ff', '#5500aa', '#00ffcc')"></button>
+      <button class="theme-btn" title="Electric Violet" style="background:#e000ff" onclick="setTheme('#e000ff', '#7000aa', '#00ffaa')"></button>
+      <button class="theme-btn" title="Acid Lime" style="background:#a6ff00" onclick="setTheme('#a6ff00', '#558800', '#ff0066')"></button>
+      <button class="theme-btn" title="Ice White" style="background:#ffffff" onclick="setTheme('#ffffff', '#555555', '#ff0000')"></button>
+    </div>
+
+    <h3>ANIMATION THEMES (6)</h3>
+    <div class="anim-options">
+      <button class="anim-btn active" id="btn-network" onclick="setAnimation('network')">NETWORK</button>
+      <button class="anim-btn" id="btn-matrix" onclick="setAnimation('matrix')">MATRIX RAIN</button>
+      <button class="anim-btn" id="btn-stars" onclick="setAnimation('stars')">WARP STARS</button>
+      <button class="anim-btn" id="btn-hex" onclick="setAnimation('hex')">HEXAGONS</button>
+      <button class="anim-btn" id="btn-cubes" onclick="setAnimation('cubes')">3D CUBES</button>
+      <button class="anim-btn" id="btn-wave" onclick="setAnimation('wave')">WAVE GRID</button>
+    </div>
+
+    <h3>SIGNAL INTERVAL</h3>
+    <div class="timer-options">
+      <button class="timer-btn" id="t-30" onclick="setIntervalTime(30)">30s</button>
+      <button class="timer-btn active" id="t-60" onclick="setIntervalTime(60)">60s</button>
+      <button class="timer-btn" id="t-90" onclick="setIntervalTime(90)">90s</button>
+    </div>
+
+    <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
+  </div>
+
+  <!-- টপ ব্যানার -->
+  <div class="top-banner">BLACKDOG AVIATOR</div>
+
+  <!-- লোগো -->
+  <img class="logo" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" />
+
+  <!-- ইউআইডি কন্টেইনার -->
+  <div class="uid-container">
+    <div class="uid-text" id="uidDisplay" title="Double click to set UID">SET UID</div>
+    <span class="uid-hint">Double click to set 9-digit UID</span>
+  </div>
+
+  <!-- সিগন্যাল সার্কেল (একসাথে ৭টি আলাদা স্টাইলের ঘূর্ণায়মান রঙিন লাইন) -->
+  <div class="signal-circle-container">
+    <div class="orbit-stage">
+      <!-- ১. লাল (ড্যাশড) -->
+      <div class="orbit-ring ring-red"></div>
+      <!-- ২. কমলা (ডটেড) -->
+      <div class="orbit-ring ring-orange"></div>
+      <!-- ৩. হলুদ (ডুয়েল আর্চ) -->
+      <div class="orbit-ring ring-yellow"></div>
+      <!-- ৪. নিওন গ্রিন (লং ড্যাশড) -->
+      <div class="orbit-ring ring-green"></div>
+      <!-- ৫. সায়ান ব্লু (ব্র্যাকেট) -->
+      <div class="orbit-ring ring-cyan"></div>
+      <!-- ৬. পার্পল (ফাইন ডট) -->
+      <div class="orbit-ring ring-purple"></div>
+      <!-- ৭. পিঙ্ক/ম্যাজেন্টা (আউটার ড্যাশ) -->
+      <div class="orbit-ring ring-pink"></div>
+
+      <!-- মাঝের কালো সিগন্যাল ডিসপ্লে -->
+      <div class="signal-circle" id="signalDisplay">SIGNAL</div>
     </div>
   </div>
 
-  <!-- STEP 2: MAIN INTERFACE -->
-  <div id="mainApp">
-    <!-- সেটিংস আইকন -->
-    <div class="settings-btn" onclick="toggleSettings()"><i class="fas fa-gear"></i></div>
+  <div class="waiting" id="waitingText"></div>
 
-    <!-- সেটিংস মোডাল -->
-    <div class="settings-modal" id="settingsModal">
-      <h3>COLOR PALETTES (8)</h3>
-      <div class="theme-options">
-        <button class="theme-btn" title="Cyan" style="background:#00f0ff" onclick="setTheme('#00f0ff', '#0855c4', '#ff0000')"></button>
-        <button class="theme-btn" title="Crimson" style="background:#ff0055" onclick="setTheme('#ff0055', '#990033', '#00f0ff')"></button>
-        <button class="theme-btn" title="Neon Green" style="background:#00ff66" onclick="setTheme('#00ff66', '#008833', '#ff0055')"></button>
-        <button class="theme-btn" title="Gold Amber" style="background:#ffbb00" onclick="setTheme('#ffbb00', '#bb8800', '#ff0000')"></button>
-        <button class="theme-btn" title="Deep Purple" style="background:#9900ff" onclick="setTheme('#9900ff', '#5500aa', '#00ffcc')"></button>
-        <button class="theme-btn" title="Electric Violet" style="background:#e000ff" onclick="setTheme('#e000ff', '#7000aa', '#00ffaa')"></button>
-        <button class="theme-btn" title="Acid Lime" style="background:#a6ff00" onclick="setTheme('#a6ff00', '#558800', '#ff0066')"></button>
-        <button class="theme-btn" title="Ice White" style="background:#ffffff" onclick="setTheme('#ffffff', '#555555', '#ff0000')"></button>
-      </div>
+  <!-- স্টার্ট সিগন্যাল বাটন -->
+  <button class="btn" id="signalBtn">Start Signal</button>
 
-      <h3>ANIMATION THEMES (6)</h3>
-      <div class="anim-options">
-        <button class="anim-btn active" id="btn-network" onclick="setAnimation('network')">NETWORK</button>
-        <button class="anim-btn" id="btn-matrix" onclick="setAnimation('matrix')">MATRIX RAIN</button>
-        <button class="anim-btn" id="btn-stars" onclick="setAnimation('stars')">WARP STARS</button>
-        <button class="anim-btn" id="btn-hex" onclick="setAnimation('hex')">HEXAGONS</button>
-        <button class="anim-btn" id="btn-cubes" onclick="setAnimation('cubes')">3D CUBES</button>
-        <button class="anim-btn" id="btn-wave" onclick="setAnimation('wave')">WAVE GRID</button>
-      </div>
-
-      <h3>SIGNAL INTERVAL</h3>
-      <div class="timer-options">
-        <button class="timer-btn" id="t-30" onclick="setIntervalTime(30)">30s</button>
-        <button class="timer-btn active" id="t-60" onclick="setIntervalTime(60)">60s</button>
-        <button class="timer-btn" id="t-90" onclick="setIntervalTime(90)">90s</button>
-      </div>
-
-      <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
-    </div>
-
-    <!-- টপ ব্যানার -->
-    <div class="top-banner">BLACKDOG AVIATOR</div>
-
-    <!-- মেইন গ্লাস প্যানেল -->
-    <div class="cyber-panel">
-      <!-- সিলেক্টেড সার্ভার ব্যাজ (ক্লিক করলে আবার প্ল্যাটফর্ম পরিবর্তন করা যাবে) -->
-      <div class="selected-platform-badge" id="activePlatformBadge" title="Click to change platform" onclick="changePlatform()">
-        <span class="dot"></span>
-        <span id="activePlatformName">SERVER: 1XBET</span>
-        <i class="fas fa-exchange-alt" style="font-size: 9px; opacity: 0.8;"></i>
-      </div>
-
-      <!-- লোগো -->
-      <img class="logo" src="https://i.ibb.co/DH4H96PT/file-00000000bbb0821183581be58d569597.png" alt="Logo" />
-
-      <!-- ইউআইডি কন্টেইনার -->
-      <div class="uid-container">
-        <div class="uid-text" id="uidDisplay" title="Double click to set UID">SET UID</div>
-        <span class="uid-hint">Double click to set 9-digit UID</span>
-      </div>
-
-      <!-- সিগন্যাল সার্কেল (৭টি ঘূর্ণায়মান রঙিন লাইন) -->
-      <div class="signal-circle-container">
-        <div class="orbit-stage">
-          <div class="orbit-ring ring-red"></div>
-          <div class="orbit-ring ring-orange"></div>
-          <div class="orbit-ring ring-yellow"></div>
-          <div class="orbit-ring ring-green"></div>
-          <div class="orbit-ring ring-cyan"></div>
-          <div class="orbit-ring ring-purple"></div>
-          <div class="orbit-ring ring-pink"></div>
-
-          <!-- মাঝের কালো সিগন্যাল ডিসপ্লে -->
-          <div class="signal-circle" id="signalDisplay">SIGNAL</div>
-        </div>
-      </div>
-
-      <div class="waiting" id="waitingText"></div>
-
-      <!-- স্টার্ট সিগন্যাল বাটন -->
-      <button class="btn" id="signalBtn">Start Signal</button>
-
-      <div class="progress-container" id="progressContainer" style="display:none;">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="progress-text" id="progressText">Auto Updating in 60s</div>
-      </div>
-    </div>
+  <div class="progress-container" id="progressContainer" style="display:none;">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-text" id="progressText">Auto Updating in 60s</div>
   </div>
 
   <script>
-    // ====== PLATFORM SELECTION LOGIC ======
-    const platformScreen = document.getElementById('platformScreen');
-    const mainApp = document.getElementById('mainApp');
-    const activePlatformName = document.getElementById('activePlatformName');
-
-    function selectPlatform(platformName) {
-      localStorage.setItem('selected_platform', platformName);
-      activePlatformName.textContent = `SERVER: ${platformName}`;
-      platformScreen.classList.add('hidden');
-      mainApp.classList.add('visible');
-    }
-
-    function changePlatform() {
-      mainApp.classList.remove('visible');
-      platformScreen.classList.remove('hidden');
-    }
-
     // ====== UID SYSTEM ======
     const uidDisplay = document.getElementById('uidDisplay');
     const savedUID = localStorage.getItem('saved_user_uid');
@@ -1024,7 +791,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ====== ডাইনামিক বৈচিত্র্যময় র্যান্ডম সিগন্যাল লজিক (অপরিবর্তিত) ======
+    // ====== ডাইনামিক বৈচিত্র্যময় র্যান্ডম সিগন্যাল লজিক ======
     const signalDisplay = document.getElementById('signalDisplay');
     const signalBtn = document.getElementById('signalBtn');
     const waitingText = document.getElementById('waitingText');
@@ -1045,7 +812,12 @@
       "Signal Ready..."
     ];
 
+    // প্রতি ক্লিকে ভিন্ন ধাঁচের পয়েন্ট আসার জন্য ৪টি রেঞ্জের রোটেশন
     function getRandomSignal() {
+      // 0: Low (1.18x - 1.95x)
+      // 1: Medium (2.10x - 4.80x)
+      // 2: High (5.20x - 12.50x)
+      // 3: Mega (14.00x - 38.00x)
       const ranges = [0, 1, 2, 3];
       const availableRanges = ranges.filter(idx => idx !== lastRangeIndex);
       const chosenRange = availableRanges[Math.floor(Math.random() * availableRanges.length)];
@@ -1078,6 +850,7 @@
       const signal = getRandomSignal();
       const finalVal = signal.toFixed(2);
       
+      // Firebase-এ ক্র্যাশ পয়েন্ট আপডেট
       db.ref('crashPoint').set(parseFloat(finalVal))
         .then(() => {
            waitingText.textContent = "SIGNAL ACTIVE IN GAME ✅";
